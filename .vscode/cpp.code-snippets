@@ -1,0 +1,109 @@
+{
+	// Place your snippets for cpp here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	"C++ default": {
+		"prefix": "cpp",
+		"body": [
+			"#include <bits/stdc++.h>",
+			"",
+			"#include <ext/pb_ds/assoc_container.hpp>",
+			"#include <ext/pb_ds/tree_policy.hpp>",
+			"#define ll long long",
+			"#define ii pair<int, int>",
+			"#define vi vector<int>",
+			"#define vii vector<ii>",
+			"#define vll vector<ll>",
+			"#define vvi vector<vector<int>>",
+			"#define vvii vector<vector<ii>>",
+			"#define vvll vector<vector<ll>>",
+			"#define fi first",
+			"#define se second",
+			"#define pb push_back",
+			"#define eb emplace_back",
+			"#define all(v) v.begin(), v.end()",
+			"#define rall(v) v.rbegin(), v.rend()",
+			"#define uni(v) v.erase(unique(v.begin(), v.end()), v.end())",
+			"#define gcd(a, b) __gcd(a, b)",
+			"#define lcm(a, b) (ll) a / __gcd(a, b) * b",
+			"",
+			"using namespace std;",
+			"",
+			"void print();",
+			"template <typename T, typename... Args>",
+			"void print(T x, Args... args);",
+			"",
+			"void solve() {",
+			"\t",
+			"}",
+			"int main() {",
+			"\tios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);",
+			"\t// freopen(\"in\", \"r\", stdin);",
+			"",
+			"\tint t = 1;",
+			"\t$1// cin >> t;",
+			"\twhile (t--) solve();",
+			"",
+			"\treturn 0;",
+			"}",
+			"",
+			"void print() { cout << \"\\n\"; }",
+			"template <typename T, typename... Args>",
+			"void print(T x, Args... args) {",
+			"\tif(sizeof...(args)){",
+			"\t\tcout << x << ' ';",
+			"\t\tprint(args...);",
+			"\t}else{",
+			"\t\tcout << x << '\\n';",
+			"\t}",
+			"}"
+		],
+		"description": "Default code for C++"
+	},
+	"Fast pow with mod": {
+		"prefix": "fpow",
+		"body": [
+			"ll fpow(ll b, ll n, ll m = M) {",
+			"\tll res = 1;",
+			"\twhile (n) {",
+			"\t\tif (n & 1) res = (res * b) % m;",
+			"\t\tn >>= 1;",
+			"\t\tb = (b * b) % m;",
+			"\t}",
+			"\treturn res;",
+			"}"
+		],
+		"description": "Fast pow with mod"
+	},
+	"RB Tree": {
+		"prefix": "rbtree",
+		"body": [
+			"using namespace __gnu_pbds;",
+			"",
+			"template <typename T>",
+			"using rbtree =",
+			"\ttree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;",
+		],
+		"description": "Red-black Tree"
+	},
+	"Euler's Totient": {
+		"prefix": "eulertotient",
+		"body": [
+			"ll eulerTotient(ll n) {",
+			"\tif (n == 0) return 0;",
+			"\tll ans = n;",
+			"\tfor (ll x = 2; x * x <= n; ++x) {",
+			"\t\tif (n % x == 0) {",
+			"\t\t\tans -= ans / x;",
+			"\t\t\twhile (n % x == 0) n /= x;",
+			"\t\t}",
+			"\t}",
+			"\tif (n > 1) ans -= ans / n;",
+			"\treturn ans;",
+			"}"
+		],
+		"description": "Euler's Totient"
+	}
+}
