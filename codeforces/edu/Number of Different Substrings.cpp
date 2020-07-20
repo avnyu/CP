@@ -38,15 +38,18 @@ struct SArr {
     bool is_substr(string const& x);
 };
 void solve() {
-    string s;
-    cin >> s;
-    s.push_back('$');
+    string s, t;
+    cin >> s >> t;
+    s = s + '!' + t + '@';
 
     SArr sfa;
     sfa.init(s);
     sfa.init_lcp();
 
-    
+    ll res = 1LL * sfa.n * (sfa.n - 1) >> 1;
+    for (auto& i : sfa.lcp) res -= i;
+
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

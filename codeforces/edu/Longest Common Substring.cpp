@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
 #define ii pair<int, int>
 #define vi vector<int>
@@ -38,15 +38,25 @@ struct SArr {
     bool is_substr(string const& x);
 };
 void solve() {
-    string s;
-    cin >> s;
-    s.push_back('$');
+    string s, t;
+    cin >> s >> t;
+    int sep = s.size();
 
+    s = s + '!' + t + '@';
     SArr sfa;
     sfa.init(s);
     sfa.init_lcp();
 
-    
+    int pos = -1, len = -1;
+
+    for (int i = 0; i < sfa.n - 1; ++i)
+        if ((sfa.suf[i] < sep && sfa.suf[i + 1] > sep) ||
+            (sfa.suf[i] > sep && sfa.suf[i + 1] < sep))
+            if (sfa.lcp[i] > len) {
+                len = sfa.lcp[i];
+                pos = sfa.suf[i];
+            }
+    print(sfa.s.substr(pos, len));
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
