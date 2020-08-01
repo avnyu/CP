@@ -40,11 +40,16 @@ struct SArr {
 void solve() {
     string s;
     cin >> s;
-    s.push_back('$');
+    s.push_back(' ');
 
     SArr sfa;
     sfa.init(s);
     sfa.init_lcp();
+
+    int n;
+    cin >> n;
+    vii a(n);
+    for (auto& i : a) cin >> i.fi >> i.se;
 
     
 }
