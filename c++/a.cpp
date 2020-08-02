@@ -27,7 +27,6 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
