@@ -27,31 +27,73 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    int n, x;
-    cin >> n >> x;
+    int n;
+    cin >> n;
     vi a(n);
     for (int i = 0; i < n; ++i)
         cin >> a[i];
-    int sum = 0, dif = 0, ok = 0;
-    for (auto&i : a) {
-        dif += abs(i - x);
-        sum += i;
-        if (i == x)ok = 1;
+    sort(all(a));
+    priority_queue<int, vector<int>, greater<int>>x, y;
+    vi res;
+    for (int i = 0; i < (n - 1) >> 1; ++i)x.push(a[i]);
+    for (int i = (n - 1) >> 1; i < n; ++i)y.push(a[i]);
+    int i = 0;
+
+    res.push_back(y.top());
+    y.pop();
+
+    vi out;
+
+    while (1) {
+        if (res.size() & 1) {
+            if (x.empty())
+                break;
+            else if (x.top() >= res.back())
+                if (y.empty())
+                    break;
+                else {
+                    out.push_back(res.back());
+                    res.pop_back();
+
+                    res.push_back(y.top());
+                    y.pop();
+                }
+            else {
+                res.push_back(x.top());
+                x.pop();
+            }
+        } else {
+            if (y.empty())
+                break;
+            else if (y.top() <= res.back()) {
+                out.push_back(y.top());
+                y.pop();
+            }
+            else {
+                res.push_back(y.top());
+                y.pop();
+            }
+        }
     }
-    if (dif == 0) {
-        print(0);
-    } else if (sum == x * n || ok) {
-        print(1);
-    } else {
-        print(2);
+    while (x.size()) {
+        out.push_back(x.top());
+        x.pop();
     }
+    while (y.size()) {
+        out.push_back(y.top());
+        y.pop();
+    }
+
+    print((res.size() - 1) >> 1);
+    for (int i = 0; i < res.size(); ++i)cout << res[i] << " \n"[i == n - 1];
+    for (int i = 0; i < out.size(); ++i)cout << out[i] << " \n"[i == out.size() - 1];
 }
 int main() {
-    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--) solve();
 
     return 0;
