@@ -27,29 +27,33 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    int n;
-    cin >> n;
-    vi sum(n + 1);
-    for (int i = 1; i++ < n;) {
-        print('?', 1, i);
-        cout.flush();
-        cin >> sum[i];
+    int a, b, c, d;
+    cin >> b >> a >> c >> d;
+    vector<string> rs = {"Tidak", "Ya"};
+    vi ans(4, 0);
+    if ((a + b) & 1) {
+        if (!a && !c)
+            ans[0] = 1;
+        else if (!b && !d)
+            ans[1] = 1;
+        else
+            ans[0] = ans[1] = 1;
+    } else {
+        if (!a && !c)
+            ans[3] = 1;
+        else if (!b && !d)
+            ans[2] = 1;
+        else
+            ans[2] = ans[3] = 1;
     }
-    print('?', 2, 3);
-    cout.flush();
-    int k;
-    cin >> k;
-    sum[1] = sum[3] - k;
-    cout << "! ";
-    for (int i = 0; i++ < n;) cout << sum[i] - sum[i - 1] << " \n"[i == n];
-    cout.flush();
+    for (int i = 0; i < 4; ++i) cout << rs[ans[i]] << " \n"[i == 3];
 }
 int main() {
-    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;
