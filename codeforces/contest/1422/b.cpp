@@ -26,33 +26,26 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void change(vi& a, vvi& ans, int x, int y, int z) {
-    a[x] -= (x + 1) * z;
-    a[y] += (x + 1) * z;
-    ans.push_back(vi{x + 1, y + 1, z});
+int test(int x, int y, int z, int t) {
+    vi a = {x, y, z, t};
+    sort(all(a));
+    int k = a[2];
+    return abs(x - k) + abs(y - k) + abs(z - k) + abs(t - k);
 }
 void solve() {
-    int n;
-    cin >> n;
-    vi a(n);
-    for (auto& i : a) cin >> i;
-    int sum = 0;
-    for (auto& i : a) sum += i;
-    if (sum / n * n != sum) {
-        print("-1");
-        return;
-    }
-    int des = sum / n;
-    vvi ans;
-    for (int i = 1; i < n; ++i) {
-        if (a[i] % (i + 1)) change(a, ans, 0, i, i + 1 - a[i] % (i + 1));
-        change(a, ans, i, 0, a[i] / (i + 1));
-    }
-    for (int i = 1; i < n; ++i) {
-        change(a, ans, 0, i, des);
-    }
-    print(ans.size());
-    for (auto& i : ans) print(i[0], i[1], i[2]);
+    int n, m;
+    cin >> n >> m;
+    vvi a(n, vi(m));
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j) cin >> a[i][j];
+    ll ans = 0;
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j) {
+            int i2 = n - 1 - i;
+            int j2 = m - 1 - j;
+            ans += test(a[i][j], a[i][j2], a[i2][j], a[i2][j2]);
+        }
+    print(ans >> 2);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

@@ -26,33 +26,20 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void change(vi& a, vvi& ans, int x, int y, int z) {
-    a[x] -= (x + 1) * z;
-    a[y] += (x + 1) * z;
-    ans.push_back(vi{x + 1, y + 1, z});
+const int M = 1e9 + 7;
+ll fpow(ll b, ll n, ll m = M) {
+    ll res = 1;
+    while (n) {
+        if (n & 1) res = (res * b) % m;
+        n >>= 1;
+        b = (b * b) % m;
+    }
+    return res;
 }
 void solve() {
-    int n;
-    cin >> n;
-    vi a(n);
-    for (auto& i : a) cin >> i;
-    int sum = 0;
-    for (auto& i : a) sum += i;
-    if (sum / n * n != sum) {
-        print("-1");
-        return;
-    }
-    int des = sum / n;
-    vvi ans;
-    for (int i = 1; i < n; ++i) {
-        if (a[i] % (i + 1)) change(a, ans, 0, i, i + 1 - a[i] % (i + 1));
-        change(a, ans, i, 0, a[i] / (i + 1));
-    }
-    for (int i = 1; i < n; ++i) {
-        change(a, ans, 0, i, des);
-    }
-    print(ans.size());
-    for (auto& i : ans) print(i[0], i[1], i[2]);
+    string s;
+    cin >> s;
+    
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
