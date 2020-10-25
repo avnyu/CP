@@ -26,17 +26,25 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+int test(vi &a, vi &b, int i, int j) {
+    
+}
 void solve() {
-    string s;
+    int N = 6;
+    vi a(N);
+    for (int i = 0; i < N; ++i) cin >> a[i];
+    sort(all(a));
+
     int n;
-    cin >> s >> n;
-    int x = s.find('.');
-    string a = s.substr(0, x);
-    string b = s.substr(x + 1);
-    int m = b.size();
-    string c = b.substr(0, m - n);
-    string d = b.substr(m - n);
-    print(a, c, d, m, n);
+    cin >> n;
+    vi f(n);
+    for (int i = 0; i < n; ++i) cin >> f[i];
+    sort(all(f));
+
+    int ans = 1e9;
+    for (int i = 0; i < 6; ++i)
+        for (int j = i + 1; j < 6; ++j) ans = min(ans, test(a, f, i, j));
+    print(ans);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

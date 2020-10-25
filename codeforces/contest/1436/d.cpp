@@ -27,16 +27,28 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    string s;
     int n;
-    cin >> s >> n;
-    int x = s.find('.');
-    string a = s.substr(0, x);
-    string b = s.substr(x + 1);
-    int m = b.size();
-    string c = b.substr(0, m - n);
-    string d = b.substr(m - n);
-    print(a, c, d, m, n);
+    cin >> n;
+    vll p(n, -1), sum(n);
+    for (int i = 1; i < n; ++i) {
+        cin >> p[i];
+        p[i]--;
+    }
+    for (int i = 0; i < n; ++i) cin >> sum[i];
+    vll max_cnt(n), child_num(n);
+    for (int i = n; i--;) {
+        if (!child_num[i]) child_num[i] = 1;
+
+        max_cnt[i] = max(max_cnt[i], sum[i] / child_num[i] +
+                                         (sum[i] % child_num[i] ? 1 : 0));
+
+        if (p[i] > -1) {
+            child_num[p[i]] += child_num[i];
+            max_cnt[p[i]] = max(max_cnt[p[i]], max_cnt[i]);
+            sum[p[i]] += sum[i];
+        }
+    }
+    print(max_cnt[0]);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

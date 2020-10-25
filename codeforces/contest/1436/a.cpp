@@ -27,23 +27,21 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    string s;
-    int n;
-    cin >> s >> n;
-    int x = s.find('.');
-    string a = s.substr(0, x);
-    string b = s.substr(x + 1);
-    int m = b.size();
-    string c = b.substr(0, m - n);
-    string d = b.substr(m - n);
-    print(a, c, d, m, n);
+    int n, m;
+    cin >> n >> m;
+    while (n--) {
+        int x;
+        cin >> x;
+        m -= x;
+    }
+    print(m == 0 ? "YES" : "NO");
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;

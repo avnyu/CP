@@ -26,24 +26,32 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+map<int, int> row;
+bool cmp(vi& x, vi& y) { return row[x[0]] < row[y[0]]; }
 void solve() {
-    string s;
-    int n;
-    cin >> s >> n;
-    int x = s.find('.');
-    string a = s.substr(0, x);
-    string b = s.substr(x + 1);
-    int m = b.size();
-    string c = b.substr(0, m - n);
-    string d = b.substr(m - n);
-    print(a, c, d, m, n);
+    int n, m;
+    cin >> n >> m;
+    vvi a(n, vi(m));
+    row.clear();
+
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j) cin >> a[i][j];
+    for (int j = 0; j < m; ++j)
+        for (int i = 0; i < n; ++i) {
+            int x;
+            cin >> x;
+            row[x] = i;
+        }
+    sort(all(a), cmp);
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j) cout << a[i][j] << " \n"[j == m - 1];
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;

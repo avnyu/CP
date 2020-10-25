@@ -26,20 +26,42 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+const int M = 1e9 + 7;
+
+bool bs(vi& a, int x, vi& req) {
+    int l = 0, r = a.size();
+    while (l < r) {
+        int m = (l + r) >> 1;
+        if (a[m] < x) {
+            l = m + 1;
+            req[0]++;
+        } else if (a[m] > x) {
+            r = m;
+            req[1]++;
+        } else
+            return true;
+    }
+    return false;
+}
 void solve() {
-    string s;
-    int n;
-    cin >> s >> n;
-    int x = s.find('.');
-    string a = s.substr(0, x);
-    string b = s.substr(x + 1);
-    int m = b.size();
-    string c = b.substr(0, m - n);
-    string d = b.substr(m - n);
-    print(a, c, d, m, n);
+    int n, x, p;
+    cin >> n >> x >> p;
+    vi a(n), r(2, 0);
+    iota(all(a), 0);
+    bs(a, p, r);
+
+    int small = x - 1, big = n - x;
+    ll res = 1;
+    while (r[0]--) res = res * small-- % M;
+    while (r[1]--) res = res * big-- % M;
+    int cnt = big + small;
+    if (cnt > 1)
+        while (cnt) res = res * cnt-- % M;
+
+    print(res);
 }
 int main() {
-    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;

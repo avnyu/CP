@@ -27,23 +27,37 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    string s;
     int n;
-    cin >> s >> n;
-    int x = s.find('.');
-    string a = s.substr(0, x);
-    string b = s.substr(x + 1);
-    int m = b.size();
-    string c = b.substr(0, m - n);
-    string d = b.substr(m - n);
-    print(a, c, d, m, n);
+    cin >> n;
+    vi a(n);
+    map<int, int> cnt;
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+        cnt[a[i]]++;
+    }
+    sort(all(a));
+
+    const int M = 1e9 + 7;
+    int res = 1;
+    for (auto& i : cnt) {
+        if (i.fi == a.back()) {
+            if (i.se > 1) res = 0;
+            break;
+        } else if (i.se > 2) {
+            res = 0;
+            break;
+        } else if (i.se == 1) {
+            res = res * 2 % M;
+        }
+    }
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;
