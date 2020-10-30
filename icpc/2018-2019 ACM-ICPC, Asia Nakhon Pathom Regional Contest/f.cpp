@@ -12,10 +12,6 @@
 #define vvll vector<vector<ll>>
 #define fi first
 #define se second
-#define pb push_back
-#define eb emplace_back
-#define all(v) v.begin(), v.end()
-#define rall(v) v.rbegin(), v.rend()
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
