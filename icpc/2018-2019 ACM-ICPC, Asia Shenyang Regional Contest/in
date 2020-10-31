@@ -1,0 +1,14 @@
+3
+8
+bool a;
+char b;
+int c;
+long long d;
+__int128 e;
+float f;
+double g;
+long double h;
+1
+int a[1000];
+1
+long double sfsdfs[1024];
