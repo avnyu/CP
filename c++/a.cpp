@@ -27,23 +27,29 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    string s;
     int n;
-    cin >> s >> n;
-    int x = s.find('.');
-    string a = s.substr(0, x);
-    string b = s.substr(x + 1);
-    int m = b.size();
-    string c = b.substr(0, m - n);
-    string d = b.substr(m - n);
-    print(a, c, d, m, n);
+    cin >> n;
+    vll a(n);
+    ll mn = 1e18;
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+        mn = min(a[i], mn);
+    }
+    ll sum = 0;
+    for (int i = 0; i < n; ++i) {
+        sum += 1 << a[i] - mn;
+    }
+    cout << fixed << setprecision(9);
+    for (int i = 0; i < n; ++i) {
+        cout << ((long double)(1 << a[i] - mn)) / sum * 100 << " \n"[i == n - 1];
+    }
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;

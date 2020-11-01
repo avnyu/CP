@@ -26,12 +26,42 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+const int M = 998244353;
+const int N = 3e5 + 7;
+vll fact(N, 1);
+
+void init() {
+    for (int i = 1; i < N; ++i) fact[i] = fact[i - 1] * i % M;
+}
+ll fpow(ll b, ll n, ll m = M) {
+    ll res = 1;
+    while (n) {
+        if (n & 1) res = (res * b) % m;
+        n >>= 1;
+        b = (b * b) % m;
+    }
+    return res;
+}
+ll gcdex(ll x) { return fpow(x, M - 2, M); }
+ll C(ll a, ll b) {
+    return fact[b] * gcdex(fact[a]) % M * gcdex(fact[b - a]) % M;
+}
 void solve() {
-    
+    int n;
+    cin >> n;
+    vi a(n + n);
+    for (auto& i : a) cin >> i;
+    sort(a.begin(), a.end());
+    ll res = 0;
+    for (int i = 0; i < n; ++i) res = (res + a[n + i] - a[i]) % M;
+    res = res * C(n, n + n) % M;
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
+
+    init();
 
     int t = 1;
     // cin >> t;

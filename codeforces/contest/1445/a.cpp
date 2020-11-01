@@ -27,14 +27,27 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    
+    int n, x;
+    cin >> n >> x;
+    vi a(n), b(n);
+    for (auto& i : a) cin >> i;
+    for (auto& i : b) cin >> i;
+    sort(all(a));
+    sort(all(b));
+
+    for (int i = 0; i < n; ++i)
+        if (a[i] + b[n - i - 1] > x) {
+            print("No");
+            return;
+        }
+    print("Yes");
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;

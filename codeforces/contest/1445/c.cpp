@@ -26,15 +26,54 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+ll fpow(ll b, ll n) {
+    ll res = 1;
+    while (n) {
+        if (n & 1) res = res * b;
+        b = b * b;
+        n >>= 1;
+    }
+    return res;
+}
 void solve() {
-    
+    ll p, q;
+    cin >> p >> q;
+    ll sav = p;
+    if (p % q)
+        print(p);
+    else {
+        ll res = 0;
+        for (ll i = 2; i < int(1e5); ++i) {
+            if (q % i == 0) {
+                ll cntp = 0, cntq = 0;
+                while (q % i == 0) {
+                    cntq++;
+                    q /= i;
+                }
+                while (p % i == 0) {
+                    cntp++;
+                    p /= i;
+                }
+                res = max(res, sav / fpow(i, cntp - cntq + 1));
+            }
+        }
+        if (q > 1) {
+            ll cntp = 0, cntq = 1;
+            while (p % q == 0) {
+                cntp++;
+                p /= q;
+            }
+            res = max(res, sav / fpow(q, cntp - cntq + 1));
+        }
+        print(res);
+    }
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;

@@ -27,14 +27,16 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    
+    int a, b, c, d;
+    cin >> a >> b >> c >> d;
+    print(max(a + b, c + d));
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;
