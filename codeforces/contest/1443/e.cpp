@@ -26,18 +26,27 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void solve() {
-    vi a(7);
-    iota(a.begin(), a.end(), 1);
-    do {
-        for (int i = 0; i < int(a.size()); ++i)
-            cout << a[i] << " \n"[i == a.size() - 1];
+const int N = 10;
+vvi per;
 
+void init() {
+    vi a(N);
+    iota(a.begin(), a.end(), 0);
+    do {
+        per.push_back(a);
     } while (next_permutation(a.begin(), a.end()));
+}
+void solve() {
+    int n, q;
+    cin >> n >> q;
+    vi a(n);
+    iota(a.begin(), a.end(), 0);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
+
+    init();
 
     int t = 1;
     cin >> t;
