@@ -27,6 +27,7 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 const int N = 10;
+const int M = 15;
 vvi per;
 
 void init() {
@@ -37,18 +38,16 @@ void init() {
     } while (next_permutation(a.begin(), a.end()));
 }
 void solve() {
+    init();
+
     int n, q;
     cin >> n >> q;
     vi a(n);
     iota(a.begin(), a.end(), 0);
 
-    
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    // freopen("in", "r", stdin);
-
-    init();
 
     int t = 1;
     cin >> t;
