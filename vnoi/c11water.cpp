@@ -39,6 +39,7 @@ void solve() {
             cin >> a[i][j];
             a[i][j]++;
         }
+    priority_queue<ii>pq;
     
 }
 int main() {
