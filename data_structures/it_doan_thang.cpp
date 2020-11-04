@@ -73,23 +73,7 @@ void add(int b, int e, pair<ll, ll> v, int i = 1) {
     add(b, e, v, i << 1);
     add(b, e, v, i << 1 | 1);
 }
-void solve() {
-    int n;
-    cin >> n;
-    vll pfs(n + 2), res(n + 2), a(n + 2);
-    for (int i = 0; i++ < n;) cin >> a[i];
-    for (int i = 0; i++ < n;) pfs[i] = pfs[i - 1] + a[i];
-    for (int i = 0; i++ < n;) res[i] = res[i - 1] + pfs[i - 1] + a[i];
-
-    ll ans = -M;
-    for (int i = 0; i++ < n;) {
-        ans = max(ans, res[i]);
-        ans = max(ans, res[i] - query(i));
-        add(i, n, pair<ll, ll>{pfs[i], res[i] - pfs[i] * i});
-    }
-
-    print(ans);
-}
+void solve() {}
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
