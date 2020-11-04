@@ -4,6 +4,7 @@
 #include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
 #define ii pair<int, int>
+#define pll pair<ll, ll>
 #define vi vector<int>
 #define vii vector<ii>
 #define vll vector<ll>
@@ -26,9 +27,23 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-set<int> lines;
+const int M = INT64_MAX;
+set<pll> lines;
 
-void add(int k, int b){
+double cross(int k1, int b1, int k2, int b2) {
+    if (k2 == k1) return -M;
+    return double(b2 - b1) / (k1 - k2);
+}
+void add(int k, int b) {
+    if (lines.empty()) {
+        lines.insert(pll{k, b});
+        return;
+    }
+
+    auto ub = lines.upper_bound(pll{k, -M});
+    if(ub == lines.end()){
+        
+    }   
     
 }
 void solve() {
