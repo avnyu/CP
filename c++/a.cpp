@@ -26,30 +26,31 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+set<int> lines;
+
+void add(int k, int b){
+    
+}
 void solve() {
-    int n;
+    int n, m;
     cin >> n;
-    vll a(n);
-    ll mn = 1e18;
     for (int i = 0; i < n; ++i) {
-        cin >> a[i];
-        mn = min(a[i], mn);
+        int k, b;
+        cin >> k >> b;
+        add(k, b);
     }
-    ll sum = 0;
-    for (int i = 0; i < n; ++i) {
-        sum += 1 << a[i] - mn;
-    }
-    cout << fixed << setprecision(9);
-    for (int i = 0; i < n; ++i) {
-        cout << ((long double)(1 << a[i] - mn)) / sum * 100 << " \n"[i == n - 1];
+    cin >> m;
+    for (int i = 0; i < m; ++i) {
+        int x;
+        cin >> x;
+        print(get(x));
     }
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    // freopen("in", "r", stdin);
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--) solve();
 
     return 0;
