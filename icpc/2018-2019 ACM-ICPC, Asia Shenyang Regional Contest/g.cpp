@@ -26,80 +26,99 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const ll N = 6e3 + 7;
-const ll M = 1e7 + 7;
-vvll dis(M);
-map<ll, ll> p;
+const int N = 6e3 + 7;
+const int M = 1e7 + 7;
+ll lastans;
+vvi dis(M);
+vi p2(N);
+map<int, int> p;
 
+int _sqrt(int k) {
+    int res = 0, x = 1 << 15;
+    while (x) {
+        res += x;
+        if (res * res > k) res -= x;
+        x >>= 1;
+    }
+    return res;
+}
 void init() {
-    for (ll i = 1; i < N; ++i)
-        for (ll j = 1; j < N; ++j)
-            if (i * i + j * j < M) {
-                ll t = i * i + j * j;
-                ll x = round(sqrt(t));
+    lastans = 0;
+    for (int i = 0; i < N; ++i) p2[i] = i * i;
+    for (int i = 1; i < N; ++i)
+        for (int j = 1; j < N; ++j)
+            if (p2[i] + p2[j] < M) {
+                int t = p2[i] + p2[j];
+                int x = _sqrt(t);
                 if (x * x == t) dis[t].push_back(i * N + j);
             }
 }
-void add(ll x, ll y, ll w) { p[x * N + y] = w; }
-void rem(ll x, ll y) {
+void add(int x, int y, int w) {
+    if (p.find(x * N + y) == p.end()) p[x * N + y] = w;
+}
+void rem(int x, int y) {
     if (p.find(x * N + y) != p.end()) p.erase(x * N + y);
 }
-void inc(ll x, ll y, ll w) {
+void inc(int x, int y, int w) {
     if (p.find(x * N + y) != p.end()) p[x * N + y] += w;
 }
-void inc(ll x, ll y, ll k, ll w) {
+void inc(int x, int y, int k, int w) {
     if (k == 0) {
         inc(x, y, w);
         return;
     }
-    ll l = round(sqrt(k));
-    if (l * l == k)
-        for (ll i = -1; i < 2; i += 2) {
-            inc(x + i * l, y, w);
-            inc(x, y + i * l, w);
+    int sk = _sqrt(k);
+    if (p2[sk] == k)
+        for (int i = -1; i < 2; i += 2) {
+            inc(x + i * sk, y, w);
+            inc(x, y + i * sk, w);
         }
-    for (auto& ps : dis[k])
-        for (ll i = -1; i < 2; i += 2)
-            for (ll j = -1; j < 2; j += 2) {
-                ll x2 = x + (ps / N) * i, y2 = y + (ps % N) * j;
+    for (int i = -1; i < 2; i += 2)
+        for (int j = -1; j < 2; j += 2)
+            for (auto& ps : dis[k]) {
+                int x2 = x + ps / N * i;
+                int y2 = y + ps % N * j;
                 inc(x2, y2, w);
             }
 }
-ll get(ll x, ll y) { return (p.find(x * N + y) != p.end()) ? p[x * N + y] : 0; }
-ll get(ll x, ll y, ll k) {
+ll get(int x, int y) { return p.find(x * N + y) != p.end() ? p[x * N + y] : 0; }
+ll get(int x, int y, int k) {
     if (k == 0) {
         return get(x, y);
     }
     ll res = 0;
-    ll l = round(sqrt(k));
-    if (l * l == k)
-        for (ll i = -1; i < 2; i += 2) {
-            res += get(x + i * l, y);
-            res += get(x, y + i * l);
+    int sk = _sqrt(k);
+    if (p2[sk] == k)
+        for (int i = -1; i < 2; i += 2) {
+            res += get(x + i * sk, y);
+            res += get(x, y + i * sk);
         }
-    for (auto& ps : dis[k])
-        for (ll i = -1; i < 2; i += 2)
-            for (ll j = -1; j < 2; j += 2) {
-                ll x2 = x + (ps / N) * i, y2 = y + (ps % N) * j;
+    for (int i = -1; i < 2; i += 2)
+        for (int j = -1; j < 2; j += 2)
+            for (auto& ps : dis[k]) {
+                int x2 = x + ps / N * i;
+                int y2 = y + ps % N * j;
                 res += get(x2, y2);
             }
     return res;
 }
 void clear() { p.clear(); }
-void solve(ll T) {
+void solve(int T) {
+    clear();
+    lastans = 0;
     cout << "Case #" << T << ":\n";
-    ll n, m, lastans = 0;
+    int n, m;
     cin >> n >> m;
-    for (ll i = 0; i < n; ++i) {
-        ll x, y, w;
+    for (int i = 0; i < n; ++i) {
+        int x, y, w;
         cin >> x >> y >> w;
         add(x, y, w);
     }
-    for (ll i = 0; i < m; ++i) {
-        ll t, x, y, w, k;
+    for (int i = 0; i < m; ++i) {
+        int t, x, y, w, k;
         cin >> t >> x >> y;
-        x = (x + lastans) % 6000 + 1;
-        y = (y + lastans) % 6000 + 1;
+        x = (lastans + x) % 6000 + 1;
+        y = (lastans + y) % 6000 + 1;
         if (t == 1) {
             cin >> w;
             add(x, y, w);
@@ -114,17 +133,15 @@ void solve(ll T) {
             print(lastans);
         }
     }
-    clear();
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    // freopen("in", "r", stdin);
 
     init();
 
-    ll t = 1;
+    int t = 1;
     cin >> t;
-    for (ll i = 0; i++ < t;) solve(i);
+    for (int i = 0; i++ < t;) solve(i);
 
     return 0;
 }
