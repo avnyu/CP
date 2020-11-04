@@ -31,7 +31,8 @@ const int M = 1e7 + 7;
 ll lastans;
 vvi dis(M);
 vi p2(N);
-map<int, int> p;
+vvi p(N, vi(N, 0));
+queue<int> sav;
 
 int _sqrt(int k) {
     int res = 0, x = 1 << 15;
@@ -49,25 +50,28 @@ void init() {
         for (int j = 1; j < N; ++j)
             if (p2[i] + p2[j] < M) {
                 int t = p2[i] + p2[j];
-                int x = _sqrt(t);
-                if (x * x == t) dis[t].push_back(i * N + j);
+                dis[t].push_back(i * N + j);
             }
 }
 void add(int x, int y, int w) {
-    if (p.find(x * N + y) == p.end()) p[x * N + y] = w;
+    if (x < 1 || x >= N || y < 1 || y >= N) return;
+    sav.push(x * N + y);
+    p[x][y] = w;
 }
 void rem(int x, int y) {
-    if (p.find(x * N + y) != p.end()) p.erase(x * N + y);
+    if (x < 1 || x >= N || y < 1 || y >= N) return;
+    p[x][y] = 0;
 }
 void inc(int x, int y, int w) {
-    if (p.find(x * N + y) != p.end()) p[x * N + y] += w;
+    if (x < 1 || x >= N || y < 1 || y >= N) return;
+    if (p[x][y]) p[x][y] += w;
 }
 void inc(int x, int y, int k, int w) {
     if (k == 0) {
         inc(x, y, w);
         return;
     }
-    int sk = _sqrt(k);
+    int sk = _sqrt(k), x2, y2;
     if (p2[sk] == k)
         for (int i = -1; i < 2; i += 2) {
             inc(x + i * sk, y, w);
@@ -76,18 +80,21 @@ void inc(int x, int y, int k, int w) {
     for (int i = -1; i < 2; i += 2)
         for (int j = -1; j < 2; j += 2)
             for (auto& ps : dis[k]) {
-                int x2 = x + ps / N * i;
-                int y2 = y + ps % N * j;
+                x2 = x + ps / N * i;
+                y2 = y + ps % N * j;
                 inc(x2, y2, w);
             }
 }
-ll get(int x, int y) { return p.find(x * N + y) != p.end() ? p[x * N + y] : 0; }
+ll get(int x, int y) {
+    if (x < 1 || x >= N || y < 1 || y >= N) return 0;
+    return p[x][y];
+}
 ll get(int x, int y, int k) {
     if (k == 0) {
         return get(x, y);
     }
     ll res = 0;
-    int sk = _sqrt(k);
+    int sk = _sqrt(k), x2, y2;
     if (p2[sk] == k)
         for (int i = -1; i < 2; i += 2) {
             res += get(x + i * sk, y);
@@ -96,16 +103,23 @@ ll get(int x, int y, int k) {
     for (int i = -1; i < 2; i += 2)
         for (int j = -1; j < 2; j += 2)
             for (auto& ps : dis[k]) {
-                int x2 = x + ps / N * i;
-                int y2 = y + ps % N * j;
+                x2 = x + ps / N * i;
+                y2 = y + ps % N * j;
                 res += get(x2, y2);
             }
     return res;
 }
-void clear() { p.clear(); }
+void clear() {
+    while (sav.size()) {
+        int x = sav.front() / N;
+        int y = sav.front() % N;
+        p[x][y] = 0;
+        sav.pop();
+    }
+}
 void solve(int T) {
-    clear();
     lastans = 0;
+
     cout << "Case #" << T << ":\n";
     int n, m;
     cin >> n >> m;
@@ -133,6 +147,8 @@ void solve(int T) {
             print(lastans);
         }
     }
+
+    clear();
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
