@@ -28,10 +28,9 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 namespace CHT {
-#define tlll tuple<ll, ll, ll>
 const ll M = INT64_MAX;
-vector<tlll> cht;
-ll get(pll x, pll y) { return (x.se - y.se) / (y.fi - x.fi); }
+vector<pll> cht;
+ll intersect(pll x, pll y) { return (x.se - y.se) / (y.fi - x.fi); }
 void add(pll line) {
     if (st.size() && st.back().fi == line.fi) st.pop_back();
     while () }
