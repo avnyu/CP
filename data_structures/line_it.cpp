@@ -7,13 +7,12 @@
 
 using namespace std;
 
-namespace it_line {
+namespace line_it {
 
-const int B = 17;
-const int N = 1 << B;
+const int N = 1 << 17;
 const ll M = INT64_MAX;
 vector<pll> it(N << 1);
-vi low(N << 1), high(N << 1);
+vi lef(N << 1), rig(N << 1);
 
 void asg(int i = 1, int l = 0, int r = N - 1) {
     lef[i] = l;
@@ -25,11 +24,11 @@ void asg(int i = 1, int l = 0, int r = N - 1) {
 }
 ll get(pll& d, int p) { return d.fi * p + d.se; }
 void update(int i, pair<ll, ll> v) {
-    if (get(it[i], low[i]) > get(v, low[i]) &&
-        get(it[i], high[i]) > get(v, high[i]))
+    if (get(it[i], lef[i]) > get(v, lef[i]) &&
+        get(it[i], rig[i]) > get(v, rig[i]))
         it[i] = v;
-    else if (get(it[i], low[i]) <= get(v, low[i]) &&
-             get(it[i], high[i]) <= get(v, high[i]))
+    else if (get(it[i], lef[i]) <= get(v, lef[i]) &&
+             get(it[i], rig[i]) <= get(v, rig[i]))
         return;
     else {
         update(i << 1, v);
@@ -37,20 +36,20 @@ void update(int i, pair<ll, ll> v) {
     }
 }
 ll query(int p, int i = 1) {
-    if (p < low[i] || p > high[i]) return M;
+    if (p < lef[i] || p > rig[i]) return M;
     ll res = get(it[i], p);
-    if (low[i] == high[i]) return res;
+    if (lef[i] == rig[i]) return res;
     res = min(res, query(p, i << 1));
     res = min(res, query(p, i << 1 | 1));
     return res;
 }
 void add(int b, int e, pll v, int i = 1) {
-    if (high[i] < b || low[i] > e) return;
-    if (b <= low[i] && high[i] <= e) {
+    if (rig[i] < b || lef[i] > e) return;
+    if (b <= lef[i] && rig[i] <= e) {
         update(i, v);
         return;
     }
     add(b, e, v, i << 1);
     add(b, e, v, i << 1 | 1);
 }
-}  // namespace it_line
+}  // namespace line_it
