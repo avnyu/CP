@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
 #define pll pair<ll, ll>
 #define vi vector<int>
@@ -12,8 +9,9 @@ using namespace std;
 
 namespace it_line {
 
-const int N = 1 << 17;
-const ll M = 1e18 + 7;
+const int B = 17;
+const int N = 1 << B;
+const ll M = INT64_MAX;
 vector<pll> it(N << 1);
 vi low(N << 1), high(N << 1);
 
