@@ -15,16 +15,13 @@ const ll M = INT64_MAX;
 vector<pll> it(N << 1);
 vi low(N << 1), high(N << 1);
 
-void init() {
-    int cur, h, m;
-    m = 32 - __builtin_clz(N);
-    for (int i = 1; i < N << 1; ++i) {
-        if (!(i & (i - 1))) cur = 0;
-        h = m - (32 - __builtin_clz(i));
-        low[i] = cur;
-        high[i] = cur + (1 << h) - 1;
-        cur += 1 << h;
-    }
+void asg(int i = 1, int l = 0, int r = N - 1) {
+    lef[i] = l;
+    rig[i] = r;
+    if (l == r) return;
+    int m = l + r >> 1;
+    asg(i << 1, l, m);
+    asg(i << 1 | 1, m + 1, r);
 }
 ll get(pll& d, int p) { return d.fi * p + d.se; }
 void update(int i, pair<ll, ll> v) {

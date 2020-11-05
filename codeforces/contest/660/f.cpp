@@ -30,26 +30,23 @@ void print(T x, Args... args);
 const int N = 1 << 18;
 const ll M = 1e18 + 7;
 vector<pair<ll, ll>> it(N << 1);
-vi low(N << 1), high(N << 1);
+vi lef(N << 1), rig(N << 1);
 
-void init() {
-    int cur, h, m;
-    m = 32 - __builtin_clz(N);
-    for (int i = 1; i < N << 1; ++i) {
-        if (!(i & (i - 1))) cur = 0;
-        h = m - (32 - __builtin_clz(i));
-        low[i] = cur;
-        high[i] = cur + (1 << h) - 1;
-        cur += 1 << h;
-    }
+void asg(int i = 1, int l = 0, int r = N - 1) {
+    lef[i] = l;
+    rig[i] = r;
+    if (l == r) return;
+    int m = l + r >> 1;
+    asg(i << 1, l, m);
+    asg(i << 1 | 1, m + 1, r);
 }
 ll get(pair<ll, ll>& d, int p) { return d.fi * p + d.se; }
 void update(int i, pair<ll, ll> v) {
-    if (get(it[i], low[i]) > get(v, low[i]) &&
-        get(it[i], high[i]) > get(v, high[i]))
+    if (get(it[i], lef[i]) > get(v, lef[i]) &&
+        get(it[i], rig[i]) > get(v, rig[i]))
         it[i] = v;
-    else if (get(it[i], low[i]) <= get(v, low[i]) &&
-             get(it[i], high[i]) <= get(v, high[i]))
+    else if (get(it[i], lef[i]) <= get(v, lef[i]) &&
+             get(it[i], rig[i]) <= get(v, rig[i]))
         return;
     else {
         update(i << 1, v);
@@ -57,16 +54,16 @@ void update(int i, pair<ll, ll> v) {
     }
 }
 ll query(int p, int i = 1) {
-    if (p < low[i] || p > high[i]) return M;
+    if (p < lef[i] || p > rig[i]) return M;
     ll res = get(it[i], p);
-    if (low[i] == high[i]) return res;
+    if (lef[i] == rig[i]) return res;
     res = min(res, query(p, i << 1));
     res = min(res, query(p, i << 1 | 1));
     return res;
 }
 void add(int b, int e, pair<ll, ll> v, int i = 1) {
-    if (high[i] < b || low[i] > e) return;
-    if (b <= low[i] && high[i] <= e) {
+    if (rig[i] < b || lef[i] > e) return;
+    if (b <= lef[i] && rig[i] <= e) {
         update(i, v);
         return;
     }
@@ -94,7 +91,7 @@ void solve() {
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
-    init();
+    asg();
 
     int t = 1;
     // cin >> t;
