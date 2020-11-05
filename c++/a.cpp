@@ -27,38 +27,61 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int M = INT64_MAX;
-set<pll> lines;
+const ll M = INT64_MAX;
 
-double cross(int k1, int b1, int k2, int b2) {
-    if (k2 == k1) return -M;
-    return double(b2 - b1) / (k1 - k2);
-}
-void add(int k, int b) {
-    if (lines.empty()) {
-        lines.insert(pll{k, b});
-        return;
-    }
-
-    auto ub = lines.upper_bound(pll{k, -M});
-    if(ub == lines.end()){
-        
-    }   
-    
-}
+double get(pll x, pll y) { return double(x.se - y.se) / (y.fi - x.fi); }
 void solve() {
     int n, m;
     cin >> n;
+    vector<pll> lin(n);
+    for (int i = 0; i < n; ++i) cin >> lin[i].fi >> lin[i].se;
+    sort(lin.rbegin(), lin.rend());
+
+    vector<pll> st;
     for (int i = 0; i < n; ++i) {
-        int k, b;
-        cin >> k >> b;
-        add(k, b);
+        if (st.size() < 2) {
+            st.push_back(lin[i]);
+            continue;
+        }
+
+        while (st.size() > 1) {
+            m = st.size();
+            pll &x = st[m - 2], &y = st[m - 1], &z = lin[i];
+            double c1 = get(x, y), c2 = get(y, z), c3 = get(x, z);
+
+            if (c1 < c2) {
+                st.push_back(z);
+                break;
+            } else if (c3 <= c1) {
+                st.pop_back();
+            } else {
+                break;
+            }
+        }
+
+        if (st.size() < 2) st.push_back(lin[i]);
     }
+
+    n = st.size();
     cin >> m;
+
+    vector<double> pt = {double(-M)};
+    for (int i = 1; i < n; ++i) pt.push_back(get(st[i - 1], st[i]));
+
+    n = pt.size();
+
     for (int i = 0; i < m; ++i) {
-        int x;
+        ll x;
         cin >> x;
-        print(get(x));
+        int p = n - 1, add = 1 << 17;
+        while (add) {
+            if (p - add >= 0 && pt[p - add] >= x) p -= add;
+
+            add >>= 1;
+        }
+        ll ans = x * st[p].fi + st[p].se;
+        ans = min(ans, x * st[0].fi + st[0].se);
+        print(ans);
     }
 }
 int main() {
