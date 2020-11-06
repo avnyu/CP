@@ -30,28 +30,28 @@ void print(T x, Args... args);
 namespace CHT {
 const ll M = INT64_MAX;
 vector<pll> cht;
-vector<ll>pt;
-ll intersect(pll x, pll y) { return (x.se - y.se) / (y.fi - x.fi); }
+vector<double> pt;
+double intersect(pll &x, pll &y) { return double(x.se - y.se) / (y.fi - x.fi); }
 void add(pll line) {
-    if (st.empty()){
-        
+    if (cht.size() && cht.back().fi == line.fi) {
+        pt.pop_back();
+        cht.pop_back();
     }
-    if (st.size() && st.back().fi == line.fi) st.pop_back();
-    while () }
+    while (cht.size() && intersect(cht.back(), line) <= pt.back()) {
+        pt.pop_back();
+        cht.pop_back();
+    }
+    pt.push_back(cht.empty() ? -M : intersect(cht.back(), line));
+    cht.push_back(line);
+}
 void add_lines(vector<pll> lines) {
     int n = lines.size();
     sort(lines.begin(), lines.end());
     for (int i = 0; i < n; ++i) add(lines[i]);
 }
 ll get(ll x) {
-    int p = int(pt.size()) - 1, add = 1 << 17;
-    while (add) {
-        if (p - add >= 0 && x < pt[p - add]) p -= add;
-        add >>= 1;
-    }
-    p--;
-    ll ans = x * st[p].fi + st[p].se;
-    return ans;
+    auto p = upper_bound(pt.begin(), pt.end(), double(x)) - pt.begin() - 1;
+    return cht[p].fi * x + cht[p].se;
 }
 }  // namespace CHT
 
@@ -63,22 +63,16 @@ void solve() {
         for (auto &j : i) cin >> j;
     sort(a.begin(), a.end());
 
-    // for (int i = 0; i < n; ++i)
-    //     for (int j = 0; j < 3; ++j) cout << a[i][j] << " \n"[j == 2];
-
     ll res = 0;
-    const int maxN = 1e9;
-    CHT::add(1, maxN, pll{0, 0}, 1, 1, maxN);
+    CHT::add(pll{0, 0});
 
     for (int i = 0; i < n; ++i) {
         auto &x = a[i][0], &y = a[i][1], &v = a[i][2];
 
-        ll cur = CHT::query(y, 1, 1, maxN);
-        // print("query", y, cur);
+        ll cur = CHT::get(-y);
         res = max(res, cur + x * y - v);
 
-        // print("add", -x, cur);
-        CHT::add(1, maxN, pll{-x, cur + x * y - v}, 1, 1, maxN);
+        CHT::add(pll{x, cur + x * y - v});
     }
     print(res);
 }
