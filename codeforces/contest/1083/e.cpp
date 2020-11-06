@@ -30,8 +30,12 @@ void print(T x, Args... args);
 namespace CHT {
 const ll M = INT64_MAX;
 vector<pll> cht;
+vector<ll>pt;
 ll intersect(pll x, pll y) { return (x.se - y.se) / (y.fi - x.fi); }
 void add(pll line) {
+    if (st.empty()){
+        
+    }
     if (st.size() && st.back().fi == line.fi) st.pop_back();
     while () }
 void add_lines(vector<pll> lines) {
