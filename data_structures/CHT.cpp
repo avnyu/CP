@@ -32,4 +32,8 @@ ll get(ll x) {
     auto p = upper_bound(pt.begin(), pt.end(), double(x)) - pt.begin() - 1;
     return cht[p].fi * x + cht[p].se;
 }
+void reset() {
+    cht.clear();
+    pt.clear();
+}
 }  // namespace CHT

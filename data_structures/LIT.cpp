@@ -7,28 +7,37 @@
 
 using namespace std;
 
-namespace line_it {
+namespace LIT {
 
 const int N = 1 << 17;
 const ll M = INT64_MAX;
 vector<pll> it(N << 1);
 vi lef(N << 1), rig(N << 1);
 
+// change for max or min
+template <typename T>
+bool better(T a, T b) {
+    return a > b;
+}
+const ll bad = -M;
+//
+
 void asg(int i = 1, int l = 0, int r = N - 1) {
     lef[i] = l;
     rig[i] = r;
     if (l == r) return;
-    int m = l + r >> 1;
+    int m = (l + r) >> 1;
     asg(i << 1, l, m);
     asg(i << 1 | 1, m + 1, r);
 }
 ll get(pll& d, int p) { return d.fi * p + d.se; }
 void update(int i, pair<ll, ll> v) {
-    if (get(it[i], lef[i]) > get(v, lef[i]) &&
-        get(it[i], rig[i]) > get(v, rig[i]))
+    bool blef = better(get(v, lef[i]), get(it[i], lef[i]));
+    bool brig = better(get(v, rig[i]), get(it[i], rig[i]));
+
+    if (blef && brig)
         it[i] = v;
-    else if (get(it[i], lef[i]) <= get(v, lef[i]) &&
-             get(it[i], rig[i]) <= get(v, rig[i]))
+    else if (!blef && !brig)
         return;
     else {
         update(i << 1, v);
@@ -36,11 +45,13 @@ void update(int i, pair<ll, ll> v) {
     }
 }
 ll query(int p, int i = 1) {
-    if (p < lef[i] || p > rig[i]) return M;
+    if (p < lef[i] || p > rig[i]) return bad;
     ll res = get(it[i], p);
     if (lef[i] == rig[i]) return res;
-    res = min(res, query(p, i << 1));
-    res = min(res, query(p, i << 1 | 1));
+    ll qlef = query(p, i << 1);
+    ll qrig = query(p, i << 1 | 1);
+    if (better(qlef, res)) res = qlef;
+    if (better(qrig, res)) res = qrig;
     return res;
 }
 void add(int b, int e, pll v, int i = 1) {
@@ -52,4 +63,7 @@ void add(int b, int e, pll v, int i = 1) {
     add(b, e, v, i << 1);
     add(b, e, v, i << 1 | 1);
 }
-}  // namespace line_it
+void reset() {
+    for (auto& p : it) p = pll{0, 0};
+}
+}  // namespace LIT
