@@ -37,6 +37,8 @@ void init() {
     } while (next_permutation(a.begin(), a.end()));
 }
 void solve() {
+    init();
+
     int n, q;
     cin >> n >> q;
     vi a(n);
@@ -46,10 +48,8 @@ int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     // freopen("in", "r", stdin);
 
-    init();
-
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--) solve();
 
     return 0;
