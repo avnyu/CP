@@ -27,28 +27,17 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    int N = 2e6;
-    vi p(N, 0);
-    p[0] = p[1] = 1;
-    for (int i = 2; i < N; ++i)
-        if (!p[i]) {
-            int j = i + i;
-            while (j < N) {
-                p[j] = 1;
-                j += i;
-            }
-        }
-    for (int i = 2; i < N; ++i)
-        if (p[i] && p[i - 1]) p[i] += p[i - 1];
-    for (int i = N - 1; i--;)
-        if (p[i] && p[i + 1]) p[i] = p[i + 1];
-
-    while (1) {
-        int a;
-        cin >> a;
-        if (a == 0) break;
-        print(p[a] ? p[a] + 1: 0);
+    string s;
+    cin >> s;
+    int res = 0, cur = 0;
+    for (int i = 0; i < int(s.size()); ++i) {
+        if (!i || s[i] != s[i - 1])
+            cur = 1;
+        else
+            cur++;
+        res = max(res, cur);
     }
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

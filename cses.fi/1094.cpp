@@ -26,34 +26,26 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void solve(int T) {
+void solve() {
     int n;
     cin >> n;
-    string in, out;
-    cin >> in >> out;
-
-    cout << "Case #" << T << ":\n";
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j) {
-            bool can = true;
-            if (i < j) {
-                for (int k = i; k++ < j;) can &= in[k] == 'Y';
-                for (int k = i; k < j; ++k) can &= out[k] == 'Y';
-            } else {
-                for (int k = i; k-- > j;) can &= in[k] == 'Y';
-                for (int k = i; k > j; --k) can &= out[k] == 'Y';
-            }
-            cout << "NY"[can] << (j == n - 1 ? "\n" : "");
-        }
+    int prv = 0;
+    ll res = 0;
+    for (int i = 0; i < n; ++i) {
+        int x;
+        cin >> x;
+        res += max(x, prv) - x;
+        prv = max(prv, x);
+    }
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    freopen("in", "r", stdin);
-    freopen("out", "w", stdout);
+    // freopen("in", "r", stdin);
 
     int t = 1;
-    cin >> t;
-    for (int i = 0; i++ < t;) solve(i);
+    // cin >> t;
+    while (t--) solve();
 
     return 0;
 }

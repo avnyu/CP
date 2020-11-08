@@ -27,24 +27,16 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    int n;
+    ll n;
     cin >> n;
-    int ans = 0;
-    for (ll i = 3; i < n; i += 2) {
-        ll j = (i - 1) >> 1;
-        ll x = sqrt(0.5 + i * i - j * j);
-        if (x * x + j * j == i * i && j + i + i <= n) {
-            ans += j + j + i + i;
-            print(i, i, j);
-        }
-        j = (i + 1) >> 1;
-        x = sqrt(0.5 + i * i - j * j);
-        if (x * x + j * j == i * i && j + i + i <= n) {
-            ans += j + j + i + i;
-            print(i, i, j);
-        }
+    set<int> s;
+    for (int i = 1; i < n; ++i) {
+        int x;
+        cin >> x;
+        s.insert(x);
     }
-    print(ans);
+    for (int i = 0; i++ < n;)
+        if (s.find(i) == s.end()) print(i);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
