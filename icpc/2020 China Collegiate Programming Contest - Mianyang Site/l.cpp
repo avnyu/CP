@@ -26,27 +26,19 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-bool test(vi& a, int time) {
-    ll hav = time;
-    for (auto& i : a) hav -= i < time ? time - i : 0;
-    return hav < 0;
-}
 void solve(int T) {
     int n;
     cin >> n;
-    vi a(n);
-    for (auto& i : a) cin >> i;
-
-    int res = INT_MAX, add = 1 << 30;
-    while (add) {
-        if (test(a, res - add)) res -= add;
-        add >>= 1;
+    vii a(n);
+    for (int i = 0; i < n; ++i) cin >> a[i].fi >> a[i].se;
+    sort(a.begin(), a.end());
+    map<int,int>cnt;
+    for (int i = 0; i < n; ++i) {
+        if(i && a[i].fi - a[i-1].fi < 31)
     }
-    cout << "Case #" << T << ": " << res << '\n';
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    // freopen("in", "r", stdin);
 
     int t = 1;
     cin >> t;

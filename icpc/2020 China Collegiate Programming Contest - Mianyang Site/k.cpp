@@ -26,27 +26,44 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-bool test(vi& a, int time) {
-    ll hav = time;
-    for (auto& i : a) hav -= i < time ? time - i : 0;
-    return hav < 0;
+bool test(int x, int n, int a = 0, int b = 0, int c = 0) {
+    if (n == 2) {
+        int k = (x - a - b) / 2;
+        if (k * 2 + a + b == x && gcd(k + a, k + b) == 1 && k + a > 1)
+            return true;
+    } else if (n == 3) {
+        int k = (x - a - b - c) / 3;
+        if (k * 3 + a + b + c == x && gcd(k + a, k + b) == 1 &&
+            gcd(k + a, k + c) == 1 && gcd(k + b, k + c) == 1 && k + a > 1)
+            return true;
+    }
+    return false;
 }
 void solve(int T) {
-    int n;
-    cin >> n;
-    vi a(n);
-    for (auto& i : a) cin >> i;
-
-    int res = INT_MAX, add = 1 << 30;
-    while (add) {
-        if (test(a, res - add)) res -= add;
-        add >>= 1;
-    }
-    cout << "Case #" << T << ": " << res << '\n';
+    cout << "Case #" << T << ": ";
+    int x;
+    cin >> x;
+    if (test(x, 2, 0, 1))
+        print(1);
+    else if (test(x, 2, 0, 2))
+        print(2);
+    else if (test(x, 3, 0, 1, 2))
+        print(2);
+    else if (test(x, 3, 0, 1, 3))
+        print(3);
+    else if (test(x, 3, 0, 2, 3))
+        print(3);
+    else if (test(x, 3, 0, 1, 4))
+        print(4);
+    else if (test(x, 3, 0, 2, 4))
+        print(4);
+    else if (test(x, 3, 0, 3, 4))
+        print(4);
+    else
+        print(-1);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    // freopen("in", "r", stdin);
 
     int t = 1;
     cin >> t;
