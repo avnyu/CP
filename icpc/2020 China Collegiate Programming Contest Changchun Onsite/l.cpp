@@ -26,29 +26,13 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int M = 1e9 + 7;
-
-ll fpow(ll b, ll n, ll m = M) {
-    ll res = 1;
-    while (n) {
-        if (n & 1) res = (res * b) % m;
-        n >>= 1;
-        b = (b * b) % m;
-    }
-    return res;
+ll sum(int l, int n){
+    
 }
 void solve() {
-    string n;
-    int c;
-    cin >> n >> c;
-    int res = 0;
-    for (int i = 0; i <= 8; ++i) {
-        int cur = 1;
-        for (int j = 0; j < 10; ++j)
-            if (1 << j & i) cur = cur * c % M;
-        res = (res + cur) % M;
-    }
-    print(res);
+    ll n, k, s;
+    cin >> n >> k >> s;
+
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
