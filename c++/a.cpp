@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
 #define ii pair<int, int>
 #define pll pair<ll, ll>
@@ -27,67 +24,80 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-namespace CHT {  // min CHT
-const ll M = INT64_MAX;
-vector<pll> st;
-vector<double> pt;
-double get(pll x, pll y) { return double(x.se - y.se) / (y.fi - x.fi); }
-void add_lines(vector<pll> lines) {
-    int n = lines.size();
+const int M = 1e9 + 7;
 
-    sort(lines.rbegin(), lines.rend());
+void rem(set<ii>& s, int p, multiset<int, greater<int>>& l) {
+    auto t = --s.upper_bound(ii{p, M});
+    int lef = t->fi, rig = t->se;
 
-    for (int i = 0; i < n; ++i) {
-        if (st.size() && st.back().fi == lines[i].fi) st.pop_back();
+    s.erase(t);
+    l.erase(l.find(rig - lef + 1));
 
-        while (1) {
-            if (int(st.size()) < 2) {
-                st.push_back(lines[i]);
-                break;
-            }
+    if (lef < p) {
+        s.insert(ii{lef, p - 1});
+        l.insert(p - lef);
+    }
+    if (rig > p) {
+        s.insert(ii{p + 1, rig});
+        l.insert(rig - p);
+    }
+}
+void add(set<ii>& s, int p, multiset<int, greater<int>>& l) {
+    auto v = s.upper_bound(ii{p, M});
 
-            int sts = st.size();
-            pll &x = st[sts - 2], &y = st[sts - 1], &z = lines[i];
-            double c1 = get(x, y), c2 = get(y, z);
+    int lef = p, rig = p;
 
-            if (c1 < c2) {
-                st.push_back(z);
-                break;
-            } else
-                st.pop_back();
+    if (v != s.begin()) {
+        auto u = v;
+        --u;
+
+        if (u->se == p - 1) {
+            lef = u->fi;
+
+            l.erase(l.find(u->se - u->fi + 1));
+            s.erase(u);
         }
     }
+    if (v != s.end() && v->fi == p + 1) {
+        rig = v->se;
 
-    pt.push_back(-M);
-    for (int i = 1; i < int(st.size()); ++i)
-        pt.push_back(get(st[i - 1], st[i]));
-    pt.push_back(M);
-}
-ll get(ll x) {
-    int p = int(pt.size()) - 1, add = 1 << 17;
-    while (add) {
-        if (p - add >= 0 && x < pt[p - add]) p -= add;
-
-        add >>= 1;
+        l.erase(l.find(v->se - v->fi + 1));
+        s.erase(v);
     }
-    p--;
 
-    ll ans = x * st[p].fi + st[p].se;
-    return ans;
+    l.insert(rig - lef + 1);
+    s.insert(ii{lef, rig});
 }
-}  // namespace CHT
 void solve() {
-    int n, m;
-    cin >> n;
-    vector<pll> lines(n);
-    for (int i = 0; i < n; ++i) cin >> lines[i].fi >> lines[i].se;
-    CHT::add_lines(lines);
+    int n, q;
+    cin >> n >> q;
+    vi a(n);
+    for (int i = 0; i < n; ++i) a[i] = i & 1;
 
-    cin >> m;
-    for (int i = 0; i < m; ++i) {
-        ll x;
+    set<ii> black, white;
+    multiset<int, greater<int>> len;
+    for (int i = 0; i < n; ++i) {
+        if (i & 1)
+            black.insert(ii{i, i});
+        else
+            white.insert(ii{i, i});
+        len.insert(1);
+    }
+
+    for (int i = 0; i < q; ++i) {
+        int x;
         cin >> x;
-        print(CHT::get(x));
+        x--;
+        if (a[x]) {
+            a[x] = 0;
+            rem(black, x, len);
+            add(white, x, len);
+        } else {
+            a[x] = 1;
+            rem(white, x, len);
+            add(black, x, len);
+        }
+        print(*len.begin());
     }
 }
 int main() {

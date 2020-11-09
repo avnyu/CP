@@ -26,13 +26,28 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-ll sum(int l, int n){
-    
+bool cmp(ll x, ll s, ll n, ll a) {
+    return log2(x) > max(log2(s) + log2(n), log2(n) + log2(n - 1) + log2(a) - log2(2));
+}
+ll sum(ll s, ll n, ll a) {
+    if (n & 1) return s * n + (n - 1) / 2 * n * a;
+    return s * n + n / 2 * (n - 1) * a;
 }
 void solve() {
     ll n, k, s;
     cin >> n >> k >> s;
 
+    ll lef = 0, rig = 0, add = 1LL << 60;
+    while (add) {
+        if (cmp(s, lef + add, n, 1)) lef += add;
+        if (cmp(s, rig + add, n, -k)) rig += add;
+        add >>= 1;
+    }
+
+    print(lef, rig);
+    print(sum(lef, n, -k), sum(lef, n, 1));
+    print(sum(rig, n, -k), sum(rig, n, 1));
+    print(rig - lef);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
