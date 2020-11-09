@@ -92,6 +92,7 @@ void jump(int x) {
     cur = (cur + x) % per_s;
 }
 void solve() {
+    int n, q;
     cin >> n >> q;
 
     init();
