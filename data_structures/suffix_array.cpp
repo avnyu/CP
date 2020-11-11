@@ -26,12 +26,11 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-struct SArr {
+struct SA {
     int n;
     string s;
     vi suf, lcp;
     void init(string const& str);
-    void init_suf();
     void init_lcp();
     int lower_bound(string const& x);
     int upper_bound(string const& x);
@@ -40,18 +39,13 @@ struct SArr {
 void solve() {
     string s;
     cin >> s;
-    s.push_back(' ');
+    s.push_back('!');
 
-    SArr sfa;
+    SA sfa;
     sfa.init(s);
     sfa.init_lcp();
 
-    int n;
-    cin >> n;
-    vii a(n);
-    for (auto& i : a) cin >> i.fi >> i.se;
-
-    
+    for (int i = 0; i < sfa.n; ++i) cout << sfa.lcp[i] << " \n"[i == sfa.n - 1];
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
@@ -74,13 +68,10 @@ void print(T x, Args... args) {
         cout << x << '\n';
     }
 }
-void SArr::init(string const& str) {
+void SA::init(string const& str) {
+    const int alphabet = 128;
     s = str;
     n = s.size();
-    init_suf();
-}
-void SArr::init_suf() {
-    const int alphabet = 128;
     suf.resize(n);
     vi c(n), cnt(max(alphabet, n), 0);
     for (int i = 0; i < n; i++) cnt[s[i]]++;
@@ -113,24 +104,19 @@ void SArr::init_suf() {
         c.swap(cn);
     }
 }
-void SArr::init_lcp() {
+void SA::init_lcp() {
+    int k = 0;
     vi rank(n);
     lcp.resize(n);
     for (int i = 0; i < n; ++i) rank[suf[i]] = i;
-
-    int k = 0;
     for (int i = 0; i < n; ++i) {
-        if (rank[i] == n - 1) {
-            k = 0;
-            continue;
-        }
-        int j = suf[rank[i] + 1];
+        int j = suf[(rank[i] + 1) % n];
         while (i + k < n && j + k < n && s[i + k] == s[j + k]) ++k;
         lcp[rank[i]] = k;
         if (k) --k;
     }
 }
-int SArr::lower_bound(string const& x) {
+int SA::lower_bound(string const& x) {
     int l = 0, r = n - 1, k = x.size(), res = n;
 
     while (l <= r) {
@@ -155,7 +141,7 @@ int SArr::lower_bound(string const& x) {
     }
     return res;
 }
-int SArr::upper_bound(string const& x) {
+int SA::upper_bound(string const& x) {
     int l = 0, r = n - 1, k = x.size(), res = n;
 
     while (l <= r) {
@@ -180,7 +166,7 @@ int SArr::upper_bound(string const& x) {
     }
     return res;
 }
-bool SArr::is_substr(string const& x) {
+bool SA::is_substr(string const& x) {
     int p = lower_bound(x), k = x.size();
     if (p == n) return false;
     for (int i = 0; i < k; ++i)
