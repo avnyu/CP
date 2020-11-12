@@ -66,15 +66,17 @@ void solve() {
         --i.se;
     }
 
-    sort(a.begin(), a.end(), [&](ii& u, ii& v) {
-        int ur = lowest(u.fi, u.se, sfa);
-        int vr = lowest(v.fi, v.se, sfa);
-        if (ur != vr) return ur < vr;
-        if (u.se - u.fi != v.se - v.fi) return u.se - u.fi < v.se - v.fi;
-        return u < v;
-    });
+    vvi res(n, vi(4));
+    for (int i = 0; i < n; ++i) {
+        res[i][0] = lowest(a[i].fi, a[i].se, sfa);
+        res[i][1] = a[i].se - a[i].fi;
+        res[i][2] = a[i].fi;
+        res[i][3] = a[i].se;
+    }
 
-    for (auto& i : a) print(i.fi + 1, i.se + 1);
+    sort(res.begin(), res.end());
+
+    for (auto& i : res) cout << i[2] + 1 << ' ' << i[3] + 1 << '\n';
 
     // print(sfa.lcp_query(2, 4));
 
