@@ -58,55 +58,6 @@ void solve() {
     s.push_back(char(32));
     a.init(s, 1, 1);
     s += s;
-
-    int n;
-    cin >> n;
-    vii a(n);
-    for (auto& i : a) {
-        cin >> i.fi >> i.se;
-        --i.fi;
-        --i.se;
-    }
-
-    vvi res(n, vi(4));
-    for (int i = 0; i < n; ++i) {
-        res[i][0] = lowest(a[i].fi, a[i].se, sfa);
-        res[i][1] = a[i].se - a[i].fi;
-        res[i][2] = a[i].fi;
-        res[i][3] = a[i].se;
-    }
-
-    sort(res.begin(), res.end());
-
-    for (auto& i : res) cout << i[2] + 1 << ' ' << i[3] + 1 << '\n';
-
-    // print(sfa.lcp_query(2, 4));
-
-    // for (auto& i : a) {
-    //     int &l = i.fi, &r = i.se;
-    //     int lw = lowest(l, r, sfa);
-    //     int cur = sfa.rank[l];
-    //     print(lw, cur, sfa.lcp_query(lw, cur));
-    //     print(l, r, s.substr(l, r - l + 1));
-    //     print("---------------");
-    // }
-
-    // print(sfa.lcp_query(2, 4));
-
-    // for (int i = 0; i < sfa.st[0].size(); ++i) {
-    //     print(i);
-    //     for (int j = 0; j < sfa.n; ++j)
-    //         cout << sfa.st[j][i] << " \n"[j == sfa.n - 1];
-    // }
-    // for (int i = 0; i < sfa.n; ++i) cout << sfa.suf[i] << " \n"[i == sfa.n -
-    // 1]; for (int i = 0; i < sfa.n; ++i) cout << sfa.lcp[i] << " \n"[i ==
-    // sfa.n - 1]; for (int i = 0; i < sfa.n; ++i) print(s.substr(sfa.suf[i],
-    // sfa.n));
-
-    // print(sfa.lcp_query(2, 3));
-    // print(sfa.lcp[2], sfa.lcp[3]);
-
-    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
