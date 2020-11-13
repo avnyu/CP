@@ -74,7 +74,7 @@ void solve(int T) {
         add /= 2;
     }
 
-    cout << fixed << setprecision(6) << r << '\n';
+    cout << fixed << setprecision(9) << r << '\n';
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
