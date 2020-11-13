@@ -28,8 +28,8 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 struct SA {
-    int n;
     string s;
+    int n, lgn;
     vi suf, lcp, rank;
     vvi st;
     void init(string const& str, bool _lcp, bool _st);
@@ -50,14 +50,33 @@ int lowest(int l, int r, SA& sfa) {
 }
 void solve() {
     string s;
-    SA a;
-    int n;
-
     cin >> s;
-    n = s.size();
     s.push_back(char(32));
-    a.init(s, 1, 1);
+
+    SA sfa;
+    sfa.init(s, 1, 1);
     s += s;
+
+    int n;
+    cin >> n;
+    vii a(n);
+    for (auto& i : a) {
+        cin >> i.fi >> i.se;
+        --i.fi;
+        --i.se;
+    }
+
+    vvi res(n, vi(4));
+    for (int i = 0; i < n; ++i) {
+        res[i][0] = lowest(a[i].fi, a[i].se, sfa);
+        res[i][1] = a[i].se - a[i].fi;
+        res[i][2] = a[i].fi;
+        res[i][3] = a[i].se;
+    }
+
+    sort(res.begin(), res.end());
+
+    for (auto& i : res) cout << i[2] + 1 << ' ' << i[3] + 1 << '\n';
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
@@ -84,6 +103,7 @@ void SA::init(string const& str, bool _lcp, bool _st) {
     const int alphabet = 128;
     s = str + str;
     n = s.size() >> 1;
+    lgn = 32 - __builtin_clz(n);
     suf.assign(n, 0);
     vi c(n), cnt(max(alphabet, n), 0);
     for (int i = 0; i < n; i++) cnt[s[i]]++;
@@ -132,7 +152,6 @@ void SA::init_lcp() {
     }
 }
 void SA::init_st() {
-    const int lgn = 32 - __builtin_clz(n);
     st.assign(n, vi(lgn, -1));
     for (int i = 0; i < n; ++i) st[i][0] = lcp[i];
     for (int j = 1; j < lgn; ++j)
@@ -140,17 +159,17 @@ void SA::init_st() {
             st[i][j] = min(st[i][j - 1], st[i + (1 << (j - 1))][j - 1]);
 }
 int SA::lower_bound(string const& x) {
-    int k = x.size(), res = n, add = 1 << 30;
+    int k = x.size(), res = n, add = 1 << lgn;
     while (add) {
-        if (res - add >= 0 && x <= s.substr(suf[res - add], k)) res -= add;
+        if (res - add >= 0 && s.compare(suf[res - add], k, x) >= 0) res -= add;
         add >>= 1;
     }
     return res;
 }
 int SA::upper_bound(string const& x) {
-    int k = x.size(), res = n, add = 1 << 30;
+    int k = x.size(), res = n, add = 1 << lgn;
     while (add) {
-        if (res - add >= 0 && x < s.substr(suf[res - add], k)) res -= add;
+        if (res - add >= 0 && s.compare(suf[res - add], k, x) > 0) res -= add;
         add >>= 1;
     }
     return res;
@@ -158,9 +177,7 @@ int SA::upper_bound(string const& x) {
 bool SA::is_substr(string const& x) {
     int p = lower_bound(x), k = x.size();
     if (p == n) return false;
-    for (int i = 0; i < k; ++i)
-        if (s[suf[p] + i] != x[i]) return false;
-    return true;
+    return s.compare(p, k, x) == 0;
 }
 int SA::lcp_query(int l, int r) {
     if (l == r) return n;
