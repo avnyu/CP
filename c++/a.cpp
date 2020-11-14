@@ -1,19 +1,25 @@
 #include <bits/stdc++.h>
+
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
 #define ii pair<int, int>
 #define pll pair<ll, ll>
+#define dd pair<double, double>
 #define vi vector<int>
+#define vl vector<ll>
+#define vd vector<double>
 #define vii vector<ii>
-#define vll vector<ll>
-#define vvi vector<vector<int>>
-#define vvii vector<vector<ii>>
-#define vvll vector<vector<ll>>
+#define vll vector<pll>
+#define vdd vector<dd>
+#define vvi vector<vi>
+#define vvl vector<vl>
+#define vvd vector<vd>
+#define vvii vector<vii>
+#define vvll vector<vll>
+#define vvdd vector<vdd>
 #define fi first
 #define se second
-#define pb push_back
-#define eb emplace_back
-#define all(v) v.begin(), v.end()
-#define rall(v) v.rbegin(), v.rend()
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
@@ -24,80 +30,53 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int M = 1e9 + 7;
-
-void rem(set<ii>& s, int p, multiset<int, greater<int>>& l) {
-    auto t = --s.upper_bound(ii{p, M});
-    int lef = t->fi, rig = t->se;
-
-    s.erase(t);
-    l.erase(l.find(rig - lef + 1));
-
-    if (lef < p) {
-        s.insert(ii{lef, p - 1});
-        l.insert(p - lef);
-    }
-    if (rig > p) {
-        s.insert(ii{p + 1, rig});
-        l.insert(rig - p);
-    }
+struct item {
+    int key, prior;
+    item *l, *r;
+    item() {}
+    item(int key, int prior) : key(key), prior(prior), l(NULL), r(NULL) {}
+};
+typedef item* pitem;
+void merge(pitem& t, pitem l, pitem r) {
+    if (!l || !r)
+        t = l ? l : r;
+    else if (l->prior > r->prior)
+        merge(l->r, l->r, r), t = l;
+    else
+        merge(r->l, l, r->l), t = r;
+    upd_cnt(t);
 }
-void add(set<ii>& s, int p, multiset<int, greater<int>>& l) {
-    auto v = s.upper_bound(ii{p, M});
-
-    int lef = p, rig = p;
-
-    if (v != s.begin()) {
-        auto u = v;
-        --u;
-
-        if (u->se == p - 1) {
-            lef = u->fi;
-
-            l.erase(l.find(u->se - u->fi + 1));
-            s.erase(u);
-        }
-    }
-    if (v != s.end() && v->fi == p + 1) {
-        rig = v->se;
-
-        l.erase(l.find(v->se - v->fi + 1));
-        s.erase(v);
-    }
-
-    l.insert(rig - lef + 1);
-    s.insert(ii{lef, rig});
+void split(pitem t, pitem& l, pitem& r, int key, int add = 0) {
+    if (!t) return void(l = r = 0);
+    int cur_key = add + cnt(t->l);  // implicit key
+    if (key <= cur_key)
+        split(t->l, l, t->l, key, add), r = t;
+    else
+        split(t->r, t->r, r, key, add + 1 + cnt(t->l)), l = t;
+    upd_cnt(t);
 }
-void solve() {
-    int n, q;
-    cin >> n >> q;
-    vi a(n);
-    for (int i = 0; i < n; ++i) a[i] = i & 1;
 
-    set<ii> black, white;
-    multiset<int, greater<int>> len;
+pitem r = nullptr;
+void add(int p) {
+    
+}
+void solve(int T) {
+    cin >> n;
     for (int i = 0; i < n; ++i) {
-        if (i & 1)
-            black.insert(ii{i, i});
-        else
-            white.insert(ii{i, i});
-        len.insert(1);
-    }
-
-    for (int i = 0; i < q; ++i) {
-        int x;
-        cin >> x;
-        x--;
-        if (a[x]) {
-            a[x] = 0;
-            rem(black, x, len);
-            add(white, x, len);
+        int t;
+        cin >> t;
+        if (t == 1) {
+            int x;
+            cin >> x;
+            add(x);
+        } else if (t == 2) {
+            cout << get() << '\n';
         } else {
-            a[x] = 1;
-            rem(white, x, len);
-            add(black, x, len);
+            int p;
+            cin >> p;
+            rem(p);
+            add(p);
         }
-        print(*len.begin());
     }
 }
 int main() {
@@ -105,7 +84,7 @@ int main() {
 
     int t = 1;
     // cin >> t;
-    while (t--) solve();
+    for (int i = 0; i++ < t;) solve(i);
 
     return 0;
 }

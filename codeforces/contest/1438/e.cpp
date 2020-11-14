@@ -35,7 +35,8 @@ ll dac(vi &a, int l, int r) {
     int m = (l + r) >> 1;
     ll res = dac(a, l, m) + dac(a, m + 1, r);
 
-    map<int,int>
+    
+
 }
 void solve(int T) {
     int n;
