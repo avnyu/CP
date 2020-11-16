@@ -31,74 +31,70 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 int mr, mc;
-vi dr, ed(2e6 + 7), ps(2e6 + 7);
-vvi tf;
-deque<ii> dq;
+vvi ed, ps;
+vii dr;
+#define iii tuple<int, int, int>
+deque<iii> dq;
 
 bool solve(int T) {
     int r, c;
     cin >> r >> c;
-    mr = r + 7, mc = c + 7;
 
     if (r == 0 && c == 0) return false;
+
+    ed.assign(r + 2, vi(c + 2, 0));
+    ps.assign(r + 2, vi(c + 2, 0));
 
     vector<vector<char>> a(r + 2, vector<char>(c + 2, '@'));
     for (int i = 0; i++ < r;)
         for (int j = 0; j++ < c;) cin >> a[i][j];
 
-    tf.resize(mr, vi(mc, 0));
-    for (int i = 0; i < mr; ++i)
-        for (int j = 0; j < mc; ++j) tf[i][j] = i * mc + j;
-
-    for (int i = 0; i < mr * mc; ++i) ed[i] = ps[i] = 0;
+    dq.clear();
     for (int i = 0; i++ < r;) {
-        if (a[i][1] != '@' && !ps[tf[i][1]]) {
-            if (a[i][1] == '!')
-                dq.push_front({0, tf[i][1]});
+        if (a[i][1] != '@' && !ps[i][1]) {
+            if (a[i][1] == '#')
+                dq.push_front({0, i, 1});
             else
-                dq.push_back({1, tf[i][1]});
+                dq.push_back({1, i, 1});
 
-            ps[tf[i][1]] = 1;
+            ps[i][1] = 1;
         }
-        if (a[i][c] != '@') ed[i * mc + c] = 1;
+        if (a[i][c] != '@') ed[i][c] = 1;
     }
     for (int j = 0; j++ < c;) {
-        if (a[r][j] != '@' && !ps[tf[r][j]]) {
-            if (a[r][j] == '!')
-                dq.push_front({0, tf[r][j]});
+        if (a[r][j] != '@' && !ps[r][j]) {
+            if (a[r][j] == '#')
+                dq.push_front({0, r, j});
             else
-                dq.push_back({1, tf[r][j]});
+                dq.push_back({1, r, j});
 
-            ps[tf[r][1]] = 1;
+            ps[r][j] = 1;
         }
-        if (a[1][j] != '@') ed[1 * mc + j] = 1;
+        if (a[1][j] != '@') ed[1][j] = 1;
     }
 
     dr.clear();
     for (int i = -1; i < 2; ++i)
-        for (int j = -1; j < 2; ++j) {
-            if (i + j == 0) continue;
-            dr.push_back(i * mc + j);
-        }
+        for (int j = -1; j < 2; ++j) dr.push_back({i, j});
 
-    int res = 0;
+    int res = -1;
     while (!dq.empty()) {
-        auto &[w, u] = dq.front();
+        auto [w, ux, uy] = dq.front();
         dq.pop_front();
 
-        if (ed[u]) {
+        if (ed[ux][uy]) {
             res = w;
             break;
         }
 
         for (auto &add : dr) {
-            auto v = u + add;
-            if (a[v / mc][v % mc] == '@' || ps[v]) continue;
-            if (a[v / mc][v % mc] == '!')
-                dq.push_front({w, v});
+            auto vx = ux + add.fi, vy = uy + add.se;
+            if (a[vx][vy] == '@' || ps[vx][vy]) continue;
+            if (a[vx][vy] == '#')
+                dq.push_front({w, vx, vy});
             else
-                dq.push_back({w + 1, v});
-            ps[v] = 1;
+                dq.push_back({w + 1, vx, vy});
+            ps[vx][vy] = 1;
         }
     }
 
