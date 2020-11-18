@@ -33,6 +33,7 @@ void print(T x, Args... args);
 const int N = 1e5 + 7;
 const int M = 1e9 + 7;
 const int lgN = 20;
+int n, m;
 vi h(N), pass(N);
 vvi par(N, vi(lgN, -1)), g(N);
 vvii reg(N);
@@ -68,13 +69,9 @@ ii lca(int u, int v) {
     return swaped ? ii{v, u} : ii{u, v};
 }
 ll cal_ans(int u) {
-    ll res = 1;
-    for (auto& v : g[u]) res = res * cal_ans(v) % M;
-    if (res == 0) return 0;
-
-    int n = g[u].size();
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j) before[i][j] = 0;
+    int nu = g[u].size();
+    for (int i = 0; i < nu; ++i)
+        for (int j = 0; j < nu; ++j) before[i][j] = 0;
 
     sort(g[u].begin(), g[u].end());
     for (auto& r : reg[u]) {
@@ -83,34 +80,33 @@ ll cal_ans(int u) {
         before[r.fi][r.se] = 1;
     }
 
-    for (int i = 0; i < p2[n]; ++i) dp[i] = 0;
+    for (int i = 0; i < p2[nu]; ++i) dp[i] = 0;
     dp[0] = 1;
-    for (int msk = 0; msk < p2[n]; ++msk) {
-        for (int b = 0; b < n; ++b) {
+    for (int msk = 0; msk < p2[nu]; ++msk) {
+        for (int b = 0; b < nu; ++b) {
             if (msk & p2[b]) continue;
             bool ok = true;
-            for (int b2 = 0; b2 < n; ++b2)
+            for (int b2 = 0; b2 < nu; ++b2)
                 if ((msk & p2[b2]) && before[b2][b]) ok = false;
             if (ok) dp[msk | p2[b]] = (dp[msk | p2[b]] + dp[msk]) % M;
         }
     }
-    return res * dp[p2[n] - 1] % M;
+    return dp[p2[nu] - 1] % M;
 }
 void init() {
     for (int i = 0; i < 22; ++i) p2[i] = 1 << i;
 }
 int get_int() {
     int x = 0;
-    char ch = _getchar_nolock();
-    while (ch < '0' || ch > '9') ch = _getchar_nolock();
-    while (ch >= '0' && ch <= '9'){
-		x = (x << 3) + (x << 1) + ch - '0';
-		ch = _getchar_nolock();
-	}
+    char c = getchar();
+    while (c < '0' || c > '9') c = getchar();
+    while (c >= '0' && c <= '9') {
+        x = (x << 3) + (x << 1) + c - '0';
+        c = getchar();
+    }
     return x;
 }
 void solve(int T) {
-    int n, m;
     init();
     n = get_int();
     m = get_int();
@@ -139,7 +135,11 @@ void solve(int T) {
         } else if (f != -2)
             reg[par[f][0]].push_back(ii{f, s});
     }
-    ll res = cal_ans(0);
+    ll res = 1;
+    for (int i = 0; i < n; ++i) {
+        res = res * cal_ans(i) % M;
+        if (res == 0) break;
+    }
     cout << res << '\n';
 }
 int main() {
