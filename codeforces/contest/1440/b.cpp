@@ -31,28 +31,22 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve(int T) {
-    ll n, m;
-    cin >> n >> m;
-    vl a(n);
-    for (ll i = 0; i < n; ++i) cin >> a[i];
-    sort(a.begin(), a.end());
+    int n, k;
+    cin >> k >> n;
+    vi a(n * k);
+    for (auto& i : a) cin >> i;
 
-    ll res = -1;
-    for (ll i = 0; i < n; ++i) {
-        ll j = upper_bound(a.begin(), a.end(), m - a[i]) - a.begin() - 1;
-        // if (j == i) j--;
-        if (j >= 0) {
-            res = max(res, a[i] + a[j]);
-            print(i, j, a[i], a[j], a[i] + a[j]);
-        }
-    }
+    ll res = 0;
+    int m = k - (k + 1) / 2 + 1;
+    for (int i = 0; i < n; ++i) res += a[n * k - (i + 1) * m];
+
     print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;

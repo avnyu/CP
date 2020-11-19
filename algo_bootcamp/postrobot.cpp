@@ -30,7 +30,7 @@ void print(T x, Args... args);
 
 const int N = 1e5 + 7;
 const int M = 1e9 + 7;
-const int lgN = 20;
+const int lgN = 17;
 int n, m;
 vi h(N), pass(N);
 vvi par(N, vi(lgN, -1)), g(N);
@@ -38,6 +38,7 @@ vvii reg(N);
 vi dp(1 << 12);
 vvi before(12, vi(12));
 vi p2(22);
+vector<vvi> b1s(13), b0s(13);
 
 void cal(int u, int p = -1, int hgt = 1) {
     if (pass[u]) return;
@@ -56,9 +57,7 @@ ii lca(int u, int v) {
     if (h[u] > h[v]) swap(u, v);
     for (int i = lgN; i--;)
         if ((h[v] - p2[i]) >= h[u]) v = par[v][i];
-    if (u == v) {
-        return swaped ? ii{-1, -1} : ii{-2, -2};
-    }
+    if (u == v) return swaped ? ii{-1, -1} : ii{-2, -2};
     for (int i = lgN; i--;)
         if (h[u] - p2[i] >= 0 && par[u][i] != par[v][i]) {
             u = par[u][i];
@@ -66,43 +65,62 @@ ii lca(int u, int v) {
         }
     return swaped ? ii{v, u} : ii{u, v};
 }
-ll cal_ans(int u) {
-    ll res = 1;
-    for (auto& v : g[u]) res = res * cal_ans(v) % M;
+int cal_ans(int u) {
+    int nu = g[u].size();
+    for (int i = 0; i < nu; ++i)
+        for (int j = 0; j < nu; ++j) before[i][j] = 0;
+    for (int i = 0; i < p2[nu]; ++i) dp[i] = 0;
+    dp[0] = 1;
 
-    int n = g[u].size();
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j) before[i][j] = 0;
-
-    sort(g[u].begin(), g[u].end());
     for (auto& r : reg[u]) {
         r.fi = lower_bound(g[u].begin(), g[u].end(), r.fi) - g[u].begin();
         r.se = lower_bound(g[u].begin(), g[u].end(), r.se) - g[u].begin();
         before[r.fi][r.se] = 1;
     }
 
-    for (int i = 0; i < p2[n]; ++i) dp[i] = 0;
-    dp[0] = 1;
-    for (int msk = 0; msk < p2[n]; ++msk) {
-        for (int b = 0; b < n; ++b) {
-            if (msk & p2[b]) continue;
+    for (int msk = 0; msk < p2[nu]; ++msk) {
+        for (auto& b1 : b0s[nu][msk]) {
             bool ok = true;
-            for (int b2 = 0; b2 < n; ++b2)
-                if ((msk & p2[b2]) && before[b2][b]) ok = false;
-            if (ok) dp[msk | p2[b]] = (dp[msk | p2[b]] + dp[msk]) % M;
+            for (auto& b2 : b1s[nu][msk])
+                if (before[b1][b2]) {
+                    ok = false;
+                    break;
+                }
+            if (ok) dp[msk | p2[b1]] = (dp[msk | p2[b1]] + dp[msk]) % M;
         }
     }
-    return res * dp[p2[n] - 1] % M;
+    return dp[p2[nu] - 1] % M;
 }
 void init() {
     for (int i = 0; i < 22; ++i) p2[i] = 1 << i;
+    for (int i = 0; i < 13; ++i) {
+        b1s[i].resize(1 << i);
+        b0s[i].resize(1 << i);
+        for (int msk = 0; msk < p2[i]; ++msk) {
+            for (int b = 0; b < i; ++b)
+                if (msk & p2[b])
+                    b1s[i][msk].push_back(b);
+                else
+                    b0s[i][msk].push_back(b);
+        }
+    }
+}
+int get_int() {
+    int x = 0;
+    char c = getchar();
+    while (c < '0' || c > '9') c = getchar();
+    while (c >= '0' && c <= '9') {
+        x = (x << 3) + (x << 1) + c - '0';
+        c = getchar();
+    }
+    return x;
 }
 void solve(int T) {
     init();
-    cin >> n >> m;
+    n = get_int();
+    m = get_int();
     for (int i = 1; i < n; ++i) {
-        int u, v;
-        cin >> u >> v;
+        int u = get_int(), v = get_int();
         u--, v--;
         g[u].push_back(v);
         g[v].push_back(u);
@@ -117,8 +135,7 @@ void solve(int T) {
     init_sparse();
 
     for (int i = 0; i < m; ++i) {
-        int f, s, u, v;
-        cin >> u >> v;
+        int f, s, u = get_int(), v = get_int();
         u--, v--;
         tie(f, s) = lca(u, v);
         if (f == -1) {
@@ -127,7 +144,11 @@ void solve(int T) {
         } else if (f != -2)
             reg[par[f][0]].push_back(ii{f, s});
     }
-    ll res = cal_ans(0);
+    ll res = 1;
+    for (int i = 0; i < n; ++i) {
+        res = res * cal_ans(i) % M;
+        if (res == 0) break;
+    }
     cout << res << '\n';
 }
 int main() {
