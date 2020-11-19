@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma gcc optimize("O3")
+// #pragma gcc optimize("O3")
 #define ll long long
 #define ii pair<int, int>
 #define pll pair<ll, ll>
@@ -32,65 +32,65 @@ void print(T x, Args... args);
 
 const int M = 1e9 + 7;
 const ll N = 1e6 + 7;
-vl u(3);
+int k, i, j, t;
+ll x, y, z, key;
+unordered_set<ll> in;
+queue<pair<ll, int>> q;
+vl n(3), a(3), b(3), u(3);
 
-bool test(ll x, ll y, ll z, vl &b) {
+bool test() {
+    x = u[0], y = u[1], z = u[2];
     if (x > y) swap(x, y);
     if (x > z) swap(x, z);
     if (y > z) swap(y, z);
     return x == b[0] && y == b[1] && z == b[2];
 }
-int bfs(vl n, vl a, vl b) {
-    set<ll> in;
-    queue<pair<ll, int>> q;
-
-    ll key = a[0] * N * N + a[1] * N + a[2];
+int bfs() {
+    key = a[0] * N * N + a[1] * N + a[2];
     in.insert(key);
     q.push({key, 0});
 
     while (!q.empty()) {
-        ll qf = q.front().fi;
-        int k = q.front().se;
+        key = q.front().fi;
+        k = q.front().se;
 
-        u[0] = qf / N / N;
-        u[1] = qf / N % N;
-        u[2] = qf % N;
+        u[0] = key / N / N;
+        u[1] = key / N % N;
+        u[2] = key % N;
 
-        if (test(u[0], u[1], u[2], b)) return k;
+        if (test()) return k;
         q.pop();
 
-        for (int i = 0; i < 3; ++i)
-            for (int j = 0; j < 3; ++j) {
+        for (i = 0; i < 3; ++i)
+            for (j = 0; j < 3; ++j) {
                 if (i == j) continue;
                 if (u[i] == 0) continue;
                 if (u[j] == n[j]) continue;
 
-                int t = min(u[i], n[j] - u[j]);
+                t = min(u[i], n[j] - u[j]);
 
                 u[i] -= t;
                 u[j] += t;
-                // print(u[0], u[1], u[2]);
 
-                ll key = u[0] * N * N + u[1] * N + u[2];
+                key = u[0] * N * N + u[1] * N + u[2];
                 if (in.find(key) == in.end()) {
                     in.insert(key);
                     q.push({key, k + 1});
-                    // print(u[0], u[1], u[2]);
                 }
 
                 u[i] += t;
                 u[j] -= t;
             }
     }
-    // for (auto &i : in) print(i[0], i[1], i[2]);
+
+    while (q.size()) q.pop();
 
     return M;
 }
 void solve(int T) {
-    vl n(3), a(3), b(3);
-    for (int i = 0; i < 3; ++i) cin >> n[i];
-    for (int i = 0; i < 3; ++i) cin >> a[i];
-    for (int i = 0; i < 3; ++i) cin >> b[i];
+    for (i = 0; i < 3; ++i) cin >> n[i];
+    for (i = 0; i < 3; ++i) cin >> a[i];
+    for (i = 0; i < 3; ++i) cin >> b[i];
     sort(b.begin(), b.end());
 
     ll res = bfs(n, a, b);
