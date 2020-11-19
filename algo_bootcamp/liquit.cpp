@@ -93,7 +93,7 @@ void solve(int T) {
     for (i = 0; i < 3; ++i) cin >> b[i];
     sort(b.begin(), b.end());
 
-    ll res = bfs(n, a, b);
+    ll res = bfs();
     cout << (res == M ? -1 : res) << '\n';
 }
 int main() {
