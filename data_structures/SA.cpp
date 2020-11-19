@@ -126,7 +126,14 @@ void solve() {
     s += '0';
     SA a(s, 1, 1);
 
-    
+    for (int i = 0; i < a.n; ++i) cout << a.lcp[i] << " \n"[i == a.n - 1];
+    // ll res = 0;
+    // int l = 0;
+    // while (l < a.n) {
+    //     string t = "" + s[a.suf[l]];
+    //     int r = a.upper_bound(t);
+
+    // }
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
