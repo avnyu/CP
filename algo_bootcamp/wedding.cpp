@@ -30,70 +30,42 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 1 << 18;
-vi it(N << 1), lz(N << 1);
-
-void push(int i, int l, int r) {
-    if (!lz[i] || i >= N) return;
-    it[i << 1] ^= lz[i];
-    lz[i << 1] ^= lz[i];
-    it[i << 1 | 1] ^= lz[i];
-    lz[i << 1 | 1] != lz[i];
-    lz[i] = 0;
-}
-void add(int b, int e, int v, int i = 1, int l = 0, int r = N - 1) {
-    push(i, l, r);
-    if (e < l || b > r) return;
-    if (b <= l && r <= e) {
-        it[i] ^= v;
-        lz[i] ^= v;
-        return;
-    }
-    int m = (l + r) >> 1;
-    add(b, e, v, i << 1, l, m);
-    add(b, e, v, i << 1 | 1, m + 1, r);
-}
-int get(int p, int i = 1, int l = 0, int r = N - 1) {
-    push(i, l, r);
-    if (p > r || p < l) return 0;
-    if (l == r) return it[i];
-    int m = (l + r) >> 1;
-    return get(p, i << 1, l, m) + get(p, i << 1 | 1, m + 1, r);
-}
 void solve(int T) {
     int n, q;
     cin >> n >> q;
-    vi a(32, 0);
+
+    vi a(31, 0), b(2e5 + 7);
+    int e = 0, p = 0;
+
     for (int i = 0; i < n; ++i) {
-        int x;
-        cin >> x;
-        add(i, i, x);
-        for (int j = 0; j < 32; ++j)
-            if (1 << j & x) a[j]++;
+        cin >> b[p];
+        for (int j = 0; j < 31; ++j)
+            if (1 << j & b[p]) a[j]++;
+        p++;
     }
-    ll res = 0;
-    int p = n;
+
     for (int i = 0; i < q; ++i) {
         int t, x;
         cin >> t >> x;
+
         if (t == 1) {
-            for (int j = 0; j < 32; ++j)
+            b[p++] = x ^ e;
+            for (int j = 0; j < 31; ++j)
                 if (1 << j & x) a[j]++;
-            add(p, p, x);
-            ++p;
             ++n;
         } else if (t == 2) {
-            x = get(x - 1);
-            for (int j = 0; j < 32; ++j)
+            x = e ^ b[x - 1];
+            for (int j = 0; j < 31; ++j)
                 if (1 << j & x) a[j]--;
             --n;
         } else {
-            for (int j = 0; j < 32; ++j)
+            for (int j = 0; j < 31; ++j)
                 if (1 << j & x) a[j] = n - a[j];
-            add(0, p - 1, x);
+            e ^= x;
         }
+
         ll res = 0;
-        for (int j = 0; j < 32; ++j) res += (1 << j) * a[j];
+        for (int j = 0; j < 31; ++j) res += (1LL << j) * a[j];
         cout << res << '\n';
     }
 }
