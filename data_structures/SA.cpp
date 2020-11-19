@@ -40,65 +40,6 @@ struct SA {
     int upper_bound(string const& x);
     bool is_substr(string const& x);
 };
-int lowest(int l, int r, SA& sfa) {
-    int res = sfa.rank[l], add = 1 << 30, len = r - l + 1;
-    while (add) {
-        if (res - add >= 0 && sfa.lcp_query(res - add, res) >= len) res -= add;
-        add >>= 1;
-    }
-    return res;
-}
-void solve() {
-    string s;
-    cin >> s;
-    s.push_back(char(32));
-
-    SA sfa;
-    sfa.init(s, 1, 1);
-    s += s;
-
-    int n;
-    cin >> n;
-    vii a(n);
-    for (auto& i : a) {
-        cin >> i.fi >> i.se;
-        --i.fi;
-        --i.se;
-    }
-
-    vvi res(n, vi(4));
-    for (int i = 0; i < n; ++i) {
-        res[i][0] = lowest(a[i].fi, a[i].se, sfa);
-        res[i][1] = a[i].se - a[i].fi;
-        res[i][2] = a[i].fi;
-        res[i][3] = a[i].se;
-    }
-
-    sort(res.begin(), res.end());
-
-    for (auto& i : res) cout << i[2] + 1 << ' ' << i[3] + 1 << '\n';
-}
-int main() {
-    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    // freopen("in", "r", stdin);
-
-    int t = 1;
-    // cin >> t;
-    while (t--) solve();
-
-    return 0;
-}
-
-void print() { cout << "\n"; }
-template <typename T, typename... Args>
-void print(T x, Args... args) {
-    if (sizeof...(args)) {
-        cout << x << ' ';
-        print(args...);
-    } else {
-        cout << x << endl;
-    }
-}
 void SA::init(string const& str, bool _lcp, bool _st) {
     const int alphabet = 128;
     s = str + str;
@@ -183,4 +124,63 @@ int SA::lcp_query(int l, int r) {
     if (l == r) return n;
     int j = 31 - __builtin_clz(r - l);
     return min(st[l][j], st[r - (1 << j)][j]);
+}
+int lowest(int l, int r, SA& sfa) {
+    int res = sfa.rank[l], add = 1 << 30, len = r - l + 1;
+    while (add) {
+        if (res - add >= 0 && sfa.lcp_query(res - add, res) >= len) res -= add;
+        add >>= 1;
+    }
+    return res;
+}
+void solve() {
+    string s;
+    cin >> s;
+    s.push_back(char(32));
+
+    SA sfa;
+    sfa.init(s, 1, 1);
+    s += s;
+
+    int n;
+    cin >> n;
+    vii a(n);
+    for (auto& i : a) {
+        cin >> i.fi >> i.se;
+        --i.fi;
+        --i.se;
+    }
+
+    vvi res(n, vi(4));
+    for (int i = 0; i < n; ++i) {
+        res[i][0] = lowest(a[i].fi, a[i].se, sfa);
+        res[i][1] = a[i].se - a[i].fi;
+        res[i][2] = a[i].fi;
+        res[i][3] = a[i].se;
+    }
+
+    sort(res.begin(), res.end());
+
+    for (auto& i : res) cout << i[2] + 1 << ' ' << i[3] + 1 << '\n';
+}
+int main() {
+    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    // freopen("in", "r", stdin);
+
+    int t = 1;
+    // cin >> t;
+    while (t--) solve();
+
+    return 0;
+}
+
+void print() { cout << "\n"; }
+template <typename T, typename... Args>
+void print(T x, Args... args) {
+    if (sizeof...(args)) {
+        cout << x << ' ';
+        print(args...);
+    } else {
+        cout << x << endl;
+    }
 }
