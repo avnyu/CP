@@ -30,60 +30,69 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-ll get_max(ll k) {
-    // ll t = 3, add = 1024;
-    // while (add) {
-    //     t += add;
-    //     if (t * t * t * (t - 2) < k) t -= add;
-    //     add >>= 1;
-    // return t + 1;
+const int N = 1e4 + 7;
+ll cnt[N], cntk[N];
 
-    ll t = 3;
-    while (t * t * t * (t - 2) < k) t++;
-    return t;
-}
-vl get_first(ll k, ll m) {
-    k -= (m - 1) * (m - 1) * (m - 1) * (m - 3);
+vl get_first(ll k) {
+    k--;
+    ll m = 0, add = 1 << 20, cntm;
+    while (add) {
+        if (m + add < N && k >= cnt[m + add]) m += add;
+        add >>= 1;
+    }
+    m++;
 
-    ll a = k / (m * m * (m - 2));
-    k %= (m * m * (m - 2));
+    // print(k, m, cntk[m]);
 
-    ll b = k / (m * (m - 2));
-    k %= (m * (m - 2));
+    k -= cnt[m - 1];
+    // m in pos 4
+    // k = cntk[k];
+    cntm = (m - 1) * (m - 1) * (m - 1);
+    if (k < cntm) {
+        vl res = {0, 0, 0, m};
+        res[0] = k / (m - 1) / (m - 1) + 1;
+        k %= (m - 1) * (m - 1);
+        res[1] = k / (m - 1) + 1;
+        k %= m - 1;
+        res[2] = k + 1;
+        return res;
+    } else
+        k -= cntm;
 
-    ll c = k / (m - 2);
+    // m in pos 3
+    cntm = (m - 1) * (m - 1) * (m - 2);
+    if (k < cntm) {
+        vl res = {0, 0, m, 0};
+        res[0] = k / (m - 1) / (m - 2) + 1;
+        k %= (m - 1) * (m - 2);
+        res[1] = k / (m - 2) + 1;
+        k %= m - 2;
+        res[3] = k + 3;
+        return res;
+    } else
+        k -= cntm;
+
+    // m in pos 2
+    cntm = (m - 1) * m * (m - 2);
+    if (k < cntm) {
+        vl res = {0, m, 0, 0};
+        res[0] = k / m / (m - 2) + 1;
+        k %= m * (m - 2);
+        res[2] = k / (m - 2) + 1;
+        k %= m - 2;
+        res[3] = k + 3;
+        return res;
+    } else
+        k -= cntm;
+
+    // m in pos 1
+    vl res = {m, 0, 0, 0};
+    res[1] = k / m / (m - 2) + 1;
+    k %= m * (m - 2);
+    res[2] = k / (m - 2) + 1;
     k %= m - 2;
-
-    ll n = k + 2;
-
-    return vl{a + 1, b + 1, c + 1, n + 1};
-}
-void get_next(vl &v, ll &m) {
-    ll &a = v[0], &b = v[1], &c = v[2], &n = v[3];
-    if (n < m) {
-        n++;
-        return;
-    }
-    if (c < m) {
-        c++;
-        n = 3;
-        return;
-    }
-    if (b < m) {
-        b++;
-        c = 1;
-        n = 3;
-        return;
-    }
-    if (a < m) {
-        a++;
-        b = c = 1;
-        n = 3;
-        return;
-    }
-    a = b = c = 1;
-    n = m + 1;
-    m = m + 1;
+    res[3] = k + 3;
+    return res;
 }
 long double fpow(long double b, ll n) {
     long double res = 1;
@@ -94,7 +103,7 @@ long double fpow(long double b, ll n) {
     }
     return res;
 }
-void print_ans(vl &v, ll m) {
+void print_ans(vl &v) {
     long double a = v[0], b = v[1], c = v[2];
     ll n = v[3];
 
@@ -103,12 +112,16 @@ void print_ans(vl &v, ll m) {
     if (n * (log(c) - log(max(a, b))) > log(2)) smaller = true;
     smaller = fpow(a, n) + fpow(b, n) < fpow(c, n);
 
-    cout << m << ' ' << a << ' ' << b << ' ' << c << ' ' << n << '\n';
-    // cout << a << '^' << n << '+' << b << '^' << n << (smaller ? '<' : '>') <<
-    // c
-    //      << '^' << n << '\n';
+    // cout << m << ' ' << a << ' ' << b << ' ' << c << ' ' << n << '\n';
+    cout << a << '^' << n << '+' << b << '^' << n << (smaller ? '<' : '>') << c
+         << '^' << n << '\n';
+}
+void init() {
+    for (int i = 3; i < N; ++i) cnt[i] = 1LL * i * i * i * (i - 2);
+    for (int i = 3; i < N; ++i) cntk[i] = cnt[i] - cnt[i - 1];
 }
 void solve(int T) {
+    init();
     ll lf, rt;
     cin >> lf >> rt;
 
@@ -116,13 +129,12 @@ void solve(int T) {
     // vl v = get_first(lf - 1, m);
 
     for (int i = lf; i <= rt; ++i) {
-        ll m = get_max(i);
-        vl v = get_first(i - 1, m);
-        print_ans(v, m);
+        vl v = get_first(i - 1);
+        // print_ans(v);
     }
 }
 int main() {
-    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
     // cin >> t;

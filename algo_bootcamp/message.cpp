@@ -28,107 +28,58 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 1e5 + 7;
-const int M = 1e9 + 7;
-const int lgN = 20;
-int n, m;
-vi h(N), pass(N);
-vvi par(N, vi(lgN, -1)), g(N);
-vvii reg(N);
-vi dp(1 << 12);
-vvi before(12, vi(12));
-vi p2(22);
-
-void cal(int u, int p = -1, int hgt = 1) {
-    if (pass[u]) return;
-    pass[u] = 1;
-    h[u] = hgt;
-    par[u][0] = p;
-    for (auto& v : g[u]) cal(v, u, hgt + 1);
-}
-void init_sparse() {
-    for (int j = 1; j < lgN; ++j)
-        for (int i = 0; i < n; ++i)
-            if (par[i][j - 1] != -1) par[i][j] = par[par[i][j - 1]][j - 1];
-}
-ii lca(int u, int v) {
-    bool swaped = h[u] > h[v];
-    if (h[u] > h[v]) swap(u, v);
-    for (int i = lgN; i--;)
-        if ((h[v] - p2[i]) >= h[u]) v = par[v][i];
-    if (u == v) {
-        return swaped ? ii{-1, -1} : ii{-2, -2};
-    }
-    for (int i = lgN; i--;)
-        if (h[u] - p2[i] >= 0 && par[u][i] != par[v][i]) {
-            u = par[u][i];
-            v = par[v][i];
-        }
-    return swaped ? ii{v, u} : ii{u, v};
-}
-ll cal_ans(int u) {
-    ll res = 1;
-    for (auto& v : g[u]) res = res * cal_ans(v) % M;
-
-    int n = g[u].size();
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j) before[i][j] = 0;
-
-    sort(g[u].begin(), g[u].end());
-    for (auto& r : reg[u]) {
-        r.fi = lower_bound(g[u].begin(), g[u].end(), r.fi) - g[u].begin();
-        r.se = lower_bound(g[u].begin(), g[u].end(), r.se) - g[u].begin();
-        before[r.fi][r.se] = 1;
-    }
-
-    for (int i = 0; i < p2[n]; ++i) dp[i] = 0;
-    dp[0] = 1;
-    for (int msk = 0; msk < p2[n]; ++msk) {
-        for (int b = 0; b < n; ++b) {
-            if (msk & p2[b]) continue;
-            bool ok = true;
-            for (int b2 = 0; b2 < n; ++b2)
-                if ((msk & p2[b2]) && before[b2][b]) ok = false;
-            if (ok) dp[msk | p2[b]] = (dp[msk | p2[b]] + dp[msk]) % M;
-        }
-    }
-    return res * dp[p2[n] - 1] % M;
-}
-void init() {
-    for (int i = 0; i < 22; ++i) p2[i] = 1 << i;
-}
 void solve(int T) {
-    init();
-    cin >> n >> m;
-    for (int i = 1; i < n; ++i) {
-        int u, v;
-        cin >> u >> v;
-        u--, v--;
-        g[u].push_back(v);
-        g[v].push_back(u);
+    int n, q;
+    cin >> n >> q;
+    // hs = 0, gv = 1, ht = 2
+    vvi type = {{1, 1, 1}, {1, 1, 3}, {1, 2, 1}};
+    vvi query(q);
+    vi a(n + 1), cnt(n + 1, 0);
+    int cntgv = 0, cntht = 0;
+    for (int i = 0; i++ < n;) cin >> a[i];
+    for (int i = 0; i < q; ++i) {
+        int t, u, v, x;
+        cin >> t;
+        if (t == 1) {
+            cin >> u >> v;
+            if (type[a[u]][a[v]] == 1) {
+                cnt[v]++;
+            } else if (type[a[u]][a[v]] == 2) {
+                cntgv++;
+                cntht++;
+            } else if (type[a[u]][a[v]] == 3) {
+                cntht++;
+                cnt[v]++;
+            }
+        } else if (t == 2) {
+            cin >> u >> x;
+            int &qu = a[query[x - 1][1]], &qv = a[query[x - 1][2]];
+            if (type[qu][qv] == 1)
+                cnt[u]--;
+            else if (type[qu][qv] == 2) {
+                if (a[u] == 0)
+                    cntht--;
+                else if (a[u] == 1)
+                    cntgv--;
+            } else {
+                if (a[u] == 0)
+                    cntht--;
+                else if (a[u] == 2)
+                    cnt[u]--;
+            }
+        } else {
+            cin >> u;
+            if (a[u] == 0)
+                cout << cnt[u] + cntht << '\n';
+            else if (a[u] == 1)
+                cout << cnt[u] + cntgv << '\n';
+            else
+                cout << cnt[u] << '\n';
+        }
+        query[i] = vi{t, u, v};
+        // for (int j = 0; j++ < n;) cout << cnt[j] << " \n"[j == n];
+        // print(cntht, cntgv);
     }
-    cal(0);
-
-    g.clear();
-    g.resize(N);
-
-    for (int i = 1; i < n; ++i) g[par[i][0]].push_back(i);
-
-    init_sparse();
-
-    for (int i = 0; i < m; ++i) {
-        int f, s, u, v;
-        cin >> u >> v;
-        u--, v--;
-        tie(f, s) = lca(u, v);
-        if (f == -1) {
-            cout << "0\n";
-            return;
-        } else if (f != -2)
-            reg[par[f][0]].push_back(ii{f, s});
-    }
-    ll res = cal_ans(0);
-    cout << res << '\n';
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
@@ -139,7 +90,6 @@ int main() {
 
     return 0;
 }
-
 void print() { cout << "\n"; }
 template <typename T, typename... Args>
 void print(T x, Args... args) {

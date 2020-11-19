@@ -46,9 +46,9 @@ vl get_first(ll k) {
     }
     m++;
 
-    print(k, m);
+    // print(k, k - cnt[m - 1], m, cntk[m]);
 
-    k = cntk[m];
+    k -= cnt[m - 1];
     // m in pos 4
     // k = cntk[k];
     cntm = (m - 1) * (m - 1) * (m - 1);
@@ -58,7 +58,7 @@ vl get_first(ll k) {
         k %= (m - 1) * (m - 1);
         res[1] = k / (m - 1) + 1;
         k %= m - 1;
-        res[2] = k + 3;
+        res[2] = k + 1;
         return res;
     } else
         k -= cntm;
@@ -98,11 +98,37 @@ vl get_first(ll k) {
     res[3] = k + 3;
     return res;
 }
+long double fpow(long double b, ll n) {
+    long double res = 1;
+    while (n) {
+        if (n & 1) res *= b;
+        n >>= 1;
+        b = b * b;
+    }
+    return res;
+}
+void print_ans(vl &v) {
+    long double a = v[0], b = v[1], c = v[2];
+    ll n = v[3];
+
+    bool smaller = false;
+    if (max(a, b) >= c) smaller = false;
+    if (n * (log(c) - log(max(a, b))) > log(2)) smaller = true;
+    smaller = fpow(a, n) + fpow(b, n) < fpow(c, n);
+
+    // cout << m << ' ' << a << ' ' << b << ' ' << c << ' ' << n << '\n';
+    cout << a << '^' << n << '+' << b << '^' << n << (smaller ? '<' : '>') << c
+         << '^' << n << '\n';
+}
 void solve(int T) {
-    ll k;
-    cin >> k;
-    auto res = get_first(k);
-    for (int j = 0; j < 4; ++j) cout << res[j] << " \n"[j == 3];
+    ll lf, rg;
+    cin >> lf >> rg;
+    for (int i = lf; i <= rg; ++i) {
+        auto res = get_first(i);
+        // print_ans(x);
+        for (auto &j : res) cout << j << " \n"[&j == &res.back()];
+    }
+    // auto x = get_first(1);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
@@ -110,7 +136,7 @@ int main() {
     init();
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;
