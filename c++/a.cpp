@@ -1,7 +1,5 @@
 #include <bits/stdc++.h>
 
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
 #define ii pair<int, int>
 #define pll pair<ll, ll>
@@ -23,6 +21,8 @@
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
+#define prtarr(u) \
+    for (auto& i : u) cout << i << " \n"[&i == &u.back()]
 
 using namespace std;
 
@@ -30,57 +30,61 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-struct item {
-    int key, prior;
-    item *l, *r;
-    item() {}
-    item(int key, int prior) : key(key), prior(prior), l(NULL), r(NULL) {}
-};
-typedef item* pitem;
-void merge(pitem& t, pitem l, pitem r) {
-    if (!l || !r)
-        t = l ? l : r;
-    else if (l->prior > r->prior)
-        merge(l->r, l->r, r), t = l;
-    else
-        merge(r->l, l, r->l), t = r;
-    upd_cnt(t);
-}
-void split(pitem t, pitem& l, pitem& r, int key, int add = 0) {
-    if (!t) return void(l = r = 0);
-    int cur_key = add + cnt(t->l);  // implicit key
-    if (key <= cur_key)
-        split(t->l, l, t->l, key, add), r = t;
-    else
-        split(t->r, t->r, r, key, add + 1 + cnt(t->l)), l = t;
-    upd_cnt(t);
-}
+const int N = 1 << 15;
+const int lgN = 15;
+vvi st(N, vi(lgN, -N));
 
-pitem r = nullptr;
-void add(int p) {
-    
+vi longestBracket(string s) {
+    int n = s.size();
+    vvi pos(N << 1);
+    st[0][0] = N;
+    for (int i = 0; i < n; ++i) {
+        st[i + 1][0] = st[i][0] + (s[i] == '(' ? 1 : -1);
+        pos[st[i + 1][0]].push_back(i + 1);
+    }
+
+    for (int j = 1; j < lgN; ++j)
+        for (int i = 0; i + (1 << j) < N; ++i)
+            st[i][j] = min(st[i][j - 1], st[i + (1 << (j - 1))][j - 1]);
+
+    auto lowest = [&](int l, int r) {
+        int t = 31 - __builtin_clz(r - l + 1);
+        return min(st[l][t], st[r + 1 - (1 << t)][t]);
+    };
+
+    int len = 0, cnt = 1;
+    for (int i = 0; i++ < n;) {
+        int r = i - 1, add = N, &prv = st[i - 1][0];
+        while (add) {
+            if (r + add < N && lowest(r, r + add) >= prv) r += add;
+            add >>= 1;
+        }
+        if (r < i) continue;
+        r = upper_bound(pos[prv].begin(), pos[prv].end(), r) -
+            pos[prv].begin() - 1;
+
+        // cout << i - 1 << ' ' << pos[prv][r] << endl;
+
+        if (pos[prv][r] - i + 1 > len) {
+            len = pos[prv][r] - i + 1;
+            cnt = 1;
+        } else if (pos[prv][r] - i + 1 == len)
+            cnt++;
+    }
+
+    // cout << "res " << len << ' ' << cnt << '\n';
+    // for (int i = 0; i++ < n;) cout << st[i][0] << " \n"[i == n];
+
+    return vi{len, cnt};
 }
 void solve(int T) {
-    cin >> n;
-    for (int i = 0; i < n; ++i) {
-        int t;
-        cin >> t;
-        if (t == 1) {
-            int x;
-            cin >> x;
-            add(x);
-        } else if (t == 2) {
-            cout << get() << '\n';
-        } else {
-            int p;
-            cin >> p;
-            rem(p);
-            add(p);
-        }
-    }
+    string s;
+    cin >> s;
+    auto res = longestBracket(s);
+    prtarr(res);
 }
 int main() {
-    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
     // cin >> t;
@@ -96,6 +100,6 @@ void print(T x, Args... args) {
         cout << x << ' ';
         print(args...);
     } else {
-        cout << x << '\n';
+        cout << x << endl;
     }
 }
