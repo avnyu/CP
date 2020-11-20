@@ -20,8 +20,6 @@
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
 #define debug(x) cerr << #x << ' ' << x << '\n'
-#define prt(u) \
-    for (auto& i : u) cout << i << " \n"[&i == &u.back()];
 
 using namespace std;
 
@@ -125,13 +123,43 @@ struct SA {
 void solve() {
     string s;
     cin >> s;
-
-    s += '!';
+    s += ' ';
     SA a(s, 1, 1);
     s += s;
 
-    prt(a.suf);
-    prt(a.lcp);
+    // for (int i = 0; i < a.n; ++i) print(i, s.substr(a.suf[i], a.n));
+    // for (int i = 0; i < a.n; ++i) cout << i << " \n"[i == a.n - 1];
+    // for (int i = 0; i < a.n; ++i) cout << a.lcp[i] << " \n"[i == a.n - 1];
+
+    const int N = 4e5 + 7;
+    vii st(N);
+    int sn = 0;
+
+    ll res = 1LL * a.n * (a.n - 1) / 2;
+    for (int i = 0; i < a.n; ++i) {
+        int cur = -1, pos = i;
+        if (sn && st[sn - 1].se > a.lcp[i]) {
+            cur = st[sn - 1].se;
+            pos = st[sn - 1].fi;
+            --sn;
+        }
+
+        while (cur != -1 && sn && st[sn - 1].se >= a.lcp[i]) {
+            res += 1LL * (cur - st[sn - 1].se) * (i - pos) * (i - pos + 1) / 2;
+            // print("at", i, "h", st[sn - 1].se + 1, cur, "l", pos, i - 1);
+            cur = st[sn - 1].se;
+            pos = st[sn - 1].fi;
+            --sn;
+        }
+        res += 1LL * (cur - a.lcp[i]) * (i - pos) * (i - pos + 1) / 2;
+
+        if (!sn || st[sn - 1].se < a.lcp[i]) {
+            st[sn++] = {pos, a.lcp[i]};
+            // print("add", sn - 1, pos, a.lcp[i]);
+        }
+    }
+
+    cout << res << '\n';
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

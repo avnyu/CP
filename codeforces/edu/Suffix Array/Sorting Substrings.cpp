@@ -19,6 +19,7 @@
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
+#define debug(x) cerr << #x << ' ' << x << '\n'
 
 using namespace std;
 
@@ -26,33 +27,56 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-struct SArr {
+struct SA {
     int n;
     string s;
-    vi suf, lcp;
-    vvi sparse;
-    void init(string const& str);
-    void init_suf();
+    vi suf, lcp, rank;
+    vvi st;
+    void init(string const& str, bool _lcp, bool _st);
     void init_lcp();
-    void init_sparse();
+    void init_st();
+    int lcp_query(int l, int r);
     int lower_bound(string const& x);
     int upper_bound(string const& x);
     bool is_substr(string const& x);
-    void print_suf();
-    void print_lcp();
 };
+int lowest(int l, int r, SA& sfa) {
+    int res = sfa.rank[l], add = 1 << 30, len = r - l + 1;
+    while (add) {
+        if (res - add >= 0 && sfa.lcp_query(res - add, res) >= len) res -= add;
+        add >>= 1;
+    }
+    return res;
+}
 void solve() {
     string s;
     cin >> s;
-    s += '@';
+    s.push_back(char(32));
 
-    SArr sfa;
-    sfa.init(s);
-    sfa.init_lcp();
+    SA sfa;
+    sfa.init(s, 1, 1);
+    s += s;
 
-    print(s);
-    sfa.print_suf();
-    sfa.print_lcp();
+    int n;
+    cin >> n;
+    vii a(n);
+    for (auto& i : a) {
+        cin >> i.fi >> i.se;
+        --i.fi;
+        --i.se;
+    }
+
+    vvi res(n, vi(4));
+    for (int i = 0; i < n; ++i) {
+        res[i][0] = lowest(a[i].fi, a[i].se, sfa);
+        res[i][1] = a[i].se - a[i].fi;
+        res[i][2] = a[i].fi;
+        res[i][3] = a[i].se;
+    }
+
+    sort(res.begin(), res.end());
+
+    for (auto& i : res) cout << i[2] + 1 << ' ' << i[3] + 1 << '\n';
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
@@ -72,17 +96,14 @@ void print(T x, Args... args) {
         cout << x << ' ';
         print(args...);
     } else {
-        cout << x << '\n';
+        cout << x << endl;
     }
 }
-void SArr::init(string const& str) {
-    s = str;
-    n = s.size();
-    init_suf();
-}
-void SArr::init_suf() {
+void SA::init(string const& str, bool _lcp, bool _st) {
     const int alphabet = 128;
-    suf.resize(n);
+    s = str + str;
+    n = s.size() >> 1;
+    suf.assign(n, 0);
     vi c(n), cnt(max(alphabet, n), 0);
     for (int i = 0; i < n; i++) cnt[s[i]]++;
     for (int i = 1; i < alphabet; i++) cnt[i] += cnt[i - 1];
@@ -113,90 +134,55 @@ void SArr::init_suf() {
         }
         c.swap(cn);
     }
-}
-void SArr::init_lcp() {
-    vi rank(n);
-    lcp.resize(n);
-    for (int i = 0; i < n; ++i) rank[suf[i]] = i;
 
+    if (_lcp) init_lcp();
+    if (_lcp && _st) init_st();
+}
+void SA::init_lcp() {
     int k = 0;
+    rank.assign(n, 0);
+    lcp.assign(n, 0);
+    for (int i = 0; i < n; ++i) rank[suf[i]] = i;
     for (int i = 0; i < n; ++i) {
-        if (rank[i] == n - 1) {
-            k = 0;
-            continue;
-        }
-        int j = suf[rank[i] + 1];
+        int j = suf[(rank[i] + 1) % n];
         while (i + k < n && j + k < n && s[i + k] == s[j + k]) ++k;
         lcp[rank[i]] = k;
         if (k) --k;
     }
 }
-void SArr::init_sparse() {
-    int logn = log2(n) + 1;
-    sparse.assign(n, vi(logn, n));
+void SA::init_st() {
+    const int lgn = 32 - __builtin_clz(n);
+    st.assign(n, vi(lgn, -1));
+    for (int i = 0; i < n; ++i) st[i][0] = lcp[i];
+    for (int j = 1; j < lgn; ++j)
+        for (int i = 0; i < n - (1 << j); ++i)
+            st[i][j] = min(st[i][j - 1], st[i + (1 << (j - 1))][j - 1]);
 }
-int SArr::lower_bound(string const& x) {
-    int l = 0, r = n - 1, k = x.size(), res = n;
-
-    while (l <= r) {
-        int m = l + r >> 1;
-
-        int test = 1;
-        for (int i = 0; i < k; ++i) {
-            if (s[(suf[m] + i) % n] == x[i]) continue;
-            if (s[(suf[m] + i) % n] < x[i])
-                test = 0;
-            else
-                test = 2;
-            break;
-        }
-
-        if (test == 0) {
-            l = m + 1;
-        } else {
-            res = m;
-            r = m - 1;
-        }
+int SA::lower_bound(string const& x) {
+    int k = x.size(), res = n, add = 1 << 30;
+    while (add) {
+        if (res - add >= 0 && s.compare(suf[res - add], k, x) >= 0) res -= add;
+        add >>= 1;
     }
     return res;
 }
-int SArr::upper_bound(string const& x) {
-    int l = 0, r = n - 1, k = x.size(), res = n;
-
-    while (l <= r) {
-        int m = l + r >> 1;
-
-        int test = 1;
-        for (int i = 0; i < k; ++i) {
-            if (s[(suf[m] + i) % n] == x[i]) continue;
-            if (s[(suf[m] + i) % n] < x[i])
-                test = 0;
-            else
-                test = 2;
-            break;
-        }
-
-        if (test < 2) {
-            l = m + 1;
-        } else {
-            res = m;
-            r = m - 1;
-        }
+int SA::upper_bound(string const& x) {
+    int k = x.size(), res = n, add = 1 << 30;
+    while (add) {
+        if (res - add >= 0 && s.compare(suf[res - add], k, x) > 0) res -= add;
+        add >>= 1;
     }
     return res;
 }
-bool SArr::is_substr(string const& x) {
+bool SA::is_substr(string const& x) {
     int p = lower_bound(x), k = x.size();
     if (p == n) return false;
     for (int i = 0; i < k; ++i)
-        if (s[(suf[p] + i) % n] != x[i]) return false;
+        if (s[suf[p] + i] != x[i]) return false;
     return true;
 }
-void SArr::print_suf() {
-    print("suffix array");
-    for (int i = 0; i < n; ++i) cout << suf[i] << " \n"[i == n - 1];
-}
-void SArr::print_lcp() {
-    print("longest common prefix");
-    for (int i = 0; i < n - 1; ++i) cout << lcp[i] << " \n"[i == n - 2];
+int SA::lcp_query(int l, int r) {
+    if (l == r) return n;
+    int j = 31 - __builtin_clz(r - l);
+    return min(st[l][j], st[r - (1 << j)][j]);
 }
