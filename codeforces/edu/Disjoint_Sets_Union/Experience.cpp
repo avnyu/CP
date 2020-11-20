@@ -28,15 +28,53 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+const int N = 3e5 + 7;
+vi par(N, -1), e(N, 0), lz(N, 0);
 
+int root(int u) {
+    if (par[u] < 0) return u;
+    int v = root(par[u]);
+    e[u] += lz[v];
+    return par[u] = v;
+}
+void merge(int u, int v) {
+    u = root(u), v = root(v);
+    if (u == v) return;
+    par[u] += par[v];
+    par[v] = u;
+}
+void add(int u, int v) { 
+    e[u] += v; 
+    lz[u] += v;
+}
+int get(int x) {
+    root(x);
+    return e[x];
+}
 void solve(int T) {
-
+    int n, m;
+    cin >> n >> m;
+    for(;m--;){
+        string s;
+        int u, v;
+        cin >> s;
+        if(s[0] == 'j'){
+            cin >> u >> v;
+            merge(u, v);
+        }else if(s[0] == 'a'){
+            cin >> u >> v;
+            add(root(u), v);
+        }else{
+            cin >> u;
+            print(get(u));
+        }
+    }
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;
@@ -49,6 +87,6 @@ void print(T x, Args... args) {
         cout << x << ' ';
         print(args...);
     } else {
-        cout << x << endl;
+        cout << x << '\n';
     }
 }

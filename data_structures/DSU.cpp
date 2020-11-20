@@ -28,15 +28,22 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-
-void solve(int T) {
-
+const int N = 1e5 + 7;
+vi par(N, -1);
+int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }
+void merge(int u, int v) {
+    u = root(u), v = root(v);
+    if (u == v) return;
+    par[u] += par[v];
+    par[v] = u;
 }
+
+void solve(int T) {}
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;

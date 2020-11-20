@@ -57,7 +57,7 @@
 			"        cout << x << ' ';",
 			"        print(args...);",
 			"    } else {",
-			"        cout << x << endl;",
+			"        cout << x << '\\n';",
 			"    }",
 			"}"
 		],
@@ -244,5 +244,20 @@
 			"};"
 		],
 		"description": "Suffix Array"
+	},
+	"Disjoint Sets Union": {
+		"prefix": "dsu",
+		"body": [
+			"const int N = 1e5 + 7;",
+			"vi par(N, -1);",
+			"int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }",
+			"void merge(int u, int v) {",
+			"    u = root(u), v = root(v);",
+			"    if (u == v) return;",
+			"    par[u] += par[v];",
+			"    par[v] = u;",
+			"}"
+		],
+		"description": "Disjoint Sets Union"
 	}
 }
