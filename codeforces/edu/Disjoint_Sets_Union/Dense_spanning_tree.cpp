@@ -28,43 +28,43 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 3e5 + 7;
-vi par(N, -1), lz(N, 0);
-vector<unordered_map<int, int>> in(N);
+const int N = 1e3 + 7;
+vi par(N, -1);
 
 int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }
 void merge(int u, int v) {
     u = root(u), v = root(v);
     if (u == v) return;
-    if (-par[u] < -par[v]) swap(u, v);
     par[u] += par[v];
     par[v] = u;
-    for (auto& i : in[v]) in[u][i.fi] = i.se + lz[v] - lz[u];
-}
-void add(int u, int v) { lz[u] += v; }
-int get(int x) {
-    int u = root(x);
-    return in[u][x] + lz[u];
 }
 void solve(int T) {
     int n, m;
     cin >> n >> m;
-    for (int i = 0; i++ < n;) in[i][i] = 0;
-    for (; m--;) {
-        string s;
-        int u, v;
-        cin >> s;
-        if (s[0] == 'j') {
-            cin >> u >> v;
-            merge(u, v);
-        } else if (s[0] == 'a') {
-            cin >> u >> v;
-            add(root(u), v);
-        } else {
-            cin >> u;
-            print(get(u));
-        }
+    vvi e(m);
+    for (int i = 0; i < m; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        e[i] = vi{w, u, v};
     }
+    sort(e.begin(), e.end());
+    
+    const int M = 2e9 + 7;
+    int res = M;
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j++ < n;) par[j] = -1;
+        int j;
+        for (j = i; j < m && -par[root(1)] != n; ++j) merge(e[j][1], e[j][2]);
+        if (-par[root(1)] == n) res = min(res, e[j - 1][0] - e[i][0]);
+    }
+
+    if (res == M) {
+        print("NO");
+        return;
+    }
+    print("YES");
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

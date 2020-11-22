@@ -30,7 +30,6 @@ void print(T x, Args... args);
 
 const int N = 3e5 + 7;
 vi par(N, -1), lz(N, 0);
-vector<unordered_map<int, int>> in(N);
 
 int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }
 void merge(int u, int v) {
@@ -39,32 +38,40 @@ void merge(int u, int v) {
     if (-par[u] < -par[v]) swap(u, v);
     par[u] += par[v];
     par[v] = u;
-    for (auto& i : in[v]) in[u][i.fi] = i.se + lz[v] - lz[u];
-}
-void add(int u, int v) { lz[u] += v; }
-int get(int x) {
-    int u = root(x);
-    return in[u][x] + lz[u];
 }
 void solve(int T) {
-    int n, m;
-    cin >> n >> m;
-    for (int i = 0; i++ < n;) in[i][i] = 0;
-    for (; m--;) {
+    int n, m, k;
+    cin >> n >> m >> k;
+    set<ii> e;
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        cin >> u >> v;
+        if (u > v) swap(u, v);
+        e.insert(ii{u, v});
+    }
+    vvi query(k, vi(3));
+    for (int i = 0; i < k; ++i) {
         string s;
         int u, v;
-        cin >> s;
-        if (s[0] == 'j') {
-            cin >> u >> v;
-            merge(u, v);
-        } else if (s[0] == 'a') {
-            cin >> u >> v;
-            add(root(u), v);
+        cin >> s >> u >> v;
+        if (u > v) swap(u, v);
+        query[i][0] = s[0] == 'c' ? 0 : 1;
+        query[i][1] = u;
+        query[i][2] = v;
+        if (s[0] == 'c') e.erase(ii{u, v});
+    }
+    for (auto& i : e) merge(i.fi, i.se);
+
+    vi res(k);
+    int p = 0;
+    for (int i = k; i--;) {
+        if (query[i][0] == 0) {
+            merge(query[i][1], query[i][2]);
         } else {
-            cin >> u;
-            print(get(u));
+            res[p++] = root(query[i][1]) == root(query[i][2]);
         }
     }
+    while (p--) print(res[p] ? "YES" : "NO");
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

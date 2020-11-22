@@ -28,41 +28,43 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 3e5 + 7;
-vi par(N, -1), lz(N, 0);
-vector<unordered_map<int, int>> in(N);
+const int N = 2e5 + 7;
+vi par(N, -1);
+vector<set<int>> notin(N);
 
 int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }
 void merge(int u, int v) {
+    // print("merge", u, v);
     u = root(u), v = root(v);
     if (u == v) return;
     if (-par[u] < -par[v]) swap(u, v);
     par[u] += par[v];
     par[v] = u;
-    for (auto& i : in[v]) in[u][i.fi] = i.se + lz[v] - lz[u];
-}
-void add(int u, int v) { lz[u] += v; }
-int get(int x) {
-    int u = root(x);
-    return in[u][x] + lz[u];
+    for (auto& i : notin[v])
+        if (root(i) != u) notin[u].insert(i);
 }
 void solve(int T) {
     int n, m;
     cin >> n >> m;
-    for (int i = 0; i++ < n;) in[i][i] = 0;
-    for (; m--;) {
-        string s;
-        int u, v;
-        cin >> s;
-        if (s[0] == 'j') {
-            cin >> u >> v;
+    for (int i = 0; i++ < n;) notin[i].insert(i + 1);
+    for (int i = 0; i < m; ++i) {
+        int t, u, v;
+        cin >> t >> u >> v;
+        // print("query", t, u, v);
+        if (t == 1) {
             merge(u, v);
-        } else if (s[0] == 'a') {
-            cin >> u >> v;
-            add(root(u), v);
+        } else if (t == 2) {
+            int r = root(u);
+            while (1) {
+                auto x = notin[r].lower_bound(u);
+                if (x == notin[r].end()) break;
+                if (*x > v) break;
+                merge(r, *x);
+                r = root(r);
+                if (notin[r].find(*x) != notin[r].end()) notin[r].erase(*x);
+            }
         } else {
-            cin >> u;
-            print(get(u));
+            print(root(u) == root(v) ? "YES" : "NO");
         }
     }
 }

@@ -29,41 +29,38 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 const int N = 3e5 + 7;
-vi par(N, -1), lz(N, 0);
-vector<unordered_map<int, int>> in(N);
+vi par(N, -1), sub(N, 0);
 
-int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }
+int root(int u) {
+    if (par[u] < 0) return u;
+    int t = root(par[u]);
+    if (par[u] != t) sub[u] = sub[par[u]] + 1;
+    return par[u] = t;
+}
 void merge(int u, int v) {
     u = root(u), v = root(v);
     if (u == v) return;
-    if (-par[u] < -par[v]) swap(u, v);
     par[u] += par[v];
     par[v] = u;
-    for (auto& i : in[v]) in[u][i.fi] = i.se + lz[v] - lz[u];
-}
-void add(int u, int v) { lz[u] += v; }
-int get(int x) {
-    int u = root(x);
-    return in[u][x] + lz[u];
 }
 void solve(int T) {
     int n, m;
     cin >> n >> m;
-    for (int i = 0; i++ < n;) in[i][i] = 0;
-    for (; m--;) {
-        string s;
-        int u, v;
-        cin >> s;
-        if (s[0] == 'j') {
+    for (int i = 0; i < m; ++i) {
+        int t, u, v;
+        cin >> t;
+        if (t == 1) {
             cin >> u >> v;
-            merge(u, v);
-        } else if (s[0] == 'a') {
-            cin >> u >> v;
-            add(root(u), v);
+            sub[u] = 1;
+            merge(v, u);
         } else {
             cin >> u;
-            print(get(u));
+            if (u == root(u))
+                print(0);
+            else
+                print(sub[u]);
         }
+        // for (int j = 0; j++ < n;) cout << sub[j] << " \n"[j == n];
     }
 }
 int main() {
