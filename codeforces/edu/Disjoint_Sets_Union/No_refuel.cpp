@@ -28,39 +28,27 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 3e5 + 7;
-vi par(N, -1), sub(N, 0);
-
-int root(int u) {
-    if (par[u] < 0) return u;
-    int t = root(par[u]);
-    sub[u] += sub[par[u]];
-    return par[u] = t;
-}
+const int N = 1e5 + 7;
+vi par(N, -1);
+int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }
 void merge(int u, int v) {
     u = root(u), v = root(v);
     if (u == v) return;
+    par[u] += par[v];
     par[v] = u;
 }
 void solve(int T) {
-    int n, m;
-    cin >> n >> m;
-    for (int i = 0; i < m; ++i) {
-        int t, u, v;
-        cin >> t;
-        if (t == 1) {
-            cin >> u >> v;
-            merge(v, u);
-            sub[u] = 1;
-        } else {
-            cin >> u;
-            if (u == root(u))
-                print(0);
-            else
-                print(sub[u]);
-        }
-        // for (int j = 0; j++ < n;) cout << sub[j] << " \n"[j == n];
+    const int M = 1e9 + 7;
+    int n, k;
+    cin >> n >> k;
+    vvi e(k, vi(3)), dis(n + 1, vi(n + 1, M));
+    for (auto& i : e) {
+        int &u = i[0], &v = i[1], &w = i[2];
+        cin >> u >> v >> w;
+        dis[u][v] = dis[v][u] = min(w, min(dis[u][v], dis[v][u]));
     }
+
+    
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
