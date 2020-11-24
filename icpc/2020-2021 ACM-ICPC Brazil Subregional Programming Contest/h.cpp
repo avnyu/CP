@@ -28,27 +28,31 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 1e5 + 7;
-vvii g(N);
-vi pas(N), res(N);
-
-void dfs(int u, int v = 1) {
-    if (pas[u]) return;
-    pas[u] = 1;
-    res[u] = v;
-    for (auto& e : g[u]) dfs(e.fi, e.se);
-}
 void solve(int T) {
-    int n, m;
-    cin >> n >> m;
-    for (int i = 0; i < m; ++i) {
-        int u, v, c;
-        cin >> u >> v >> c;
-        g[u].push_back(ii{v, c});
-        g[v].push_back(ii{u, c});
+    int n, k;
+    cin >> n >> k;
+    vl a(n);
+    for (auto& i : a) cin >> i;
+    ll l, r;
+    cin >> l >> r;
+
+    sort(a.begin(), a.end());
+    ll bl = 0, br = 0, add;
+
+    for (add = n; add--;) {
+        if (l - a[add] >= 0) {
+            l -= a[add];
+            bl += 1LL << add;
+        }
     }
-    dfs(1);
-    for (int i = 0; i++ < n;) cout << res[i] << '\n';
+    for (add = n; add--;) {
+        if (r - a[add] >= 0) {
+            r -= a[add];
+            br += 1LL << add;
+        }
+    }
+
+    
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
@@ -67,6 +71,6 @@ void print(T x, Args... args) {
         cout << x << ' ';
         print(args...);
     } else {
-        cout << x << endl;
+        cout << x << '\n';
     }
 }

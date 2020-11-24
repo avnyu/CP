@@ -28,13 +28,13 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 2e5 + 7;
+const int N = 1e5 + 7;
 const int lgN = 20;
 vvi par(N, vi(lgN, -1)), g(N), lz(N);
 vi res(N), y(N), bit(N);
 
 void add(int p, int v) {
-    while (p < N) {
+    while (p < bit.size()) {
         bit[p] += v;
         p += p & -p;
     }
@@ -49,7 +49,7 @@ int get(int p) {
 }
 void init() {
     for (int j = 1; j < lgN; ++j)
-        for (int i = 0; i + (1 << j) < N; ++i)
+        for (int i = 0; i < par.size(); ++i)
             if (par[i][j - 1] != -1) par[i][j] = par[par[i][j - 1]][j - 1];
 }
 void dfs(int u) {

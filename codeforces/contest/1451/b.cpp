@@ -28,33 +28,37 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 1e5 + 7;
-vvii g(N);
-vi pas(N), res(N);
-
-void dfs(int u, int v = 1) {
-    if (pas[u]) return;
-    pas[u] = 1;
-    res[u] = v;
-    for (auto& e : g[u]) dfs(e.fi, e.se);
-}
 void solve(int T) {
-    int n, m;
-    cin >> n >> m;
-    for (int i = 0; i < m; ++i) {
-        int u, v, c;
-        cin >> u >> v >> c;
-        g[u].push_back(ii{v, c});
-        g[v].push_back(ii{u, c});
+    int n, q;
+    cin >> n >> q;
+    string s;
+    cin >> s;
+    for (int i = 0; i < q; ++i) {
+        int l, r;
+        cin >> l >> r;
+        l--, r--;
+        int sl = -1, sr = 0;
+        for (int j = l; j <= r; ++j) {
+            while (sr < n && s[sr] != s[j]) sr++;
+            // print(i, sr);
+            if (sl == -1) sl = sr;
+            sr++;
+        }
+        sr--;
+        if (r - l == sr - sl) {
+            sr++;
+            while (sr < n && s[sr] != s[r]) sr++;
+        }
+
+        // print(s, l, r, sl, sr);
+        print(sr == n ? "NO" : "YES");
     }
-    dfs(1);
-    for (int i = 0; i++ < n;) cout << res[i] << '\n';
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;
@@ -67,6 +71,6 @@ void print(T x, Args... args) {
         cout << x << ' ';
         print(args...);
     } else {
-        cout << x << endl;
+        cout << x << '\n';
     }
 }
