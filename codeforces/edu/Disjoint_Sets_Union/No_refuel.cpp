@@ -38,17 +38,21 @@ void merge(int u, int v) {
     par[v] = u;
 }
 void solve(int T) {
-    const int M = 1e9 + 7;
     int n, k;
     cin >> n >> k;
-    vvi e(k, vi(3)), dis(n + 1, vi(n + 1, M));
-    for (auto& i : e) {
-        int &u = i[0], &v = i[1], &w = i[2];
-        cin >> u >> v >> w;
-        dis[u][v] = dis[v][u] = min(w, min(dis[u][v], dis[v][u]));
-    }
+    vvi e(k, vi(3));
+    for (auto& i : e)
+        for (auto& j : i) cin >> j;
 
-    
+    sort(e.begin(), e.end(), [&](vi& a, vi& b) { return a[2] < b[2]; });
+    for (auto& i : e) {
+        int &u = i[0], &v = i[1], &d = i[2];
+        merge(u, v);
+        if (par[root(1)] == -n) {
+            print(d);
+            break;
+        }
+    }
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

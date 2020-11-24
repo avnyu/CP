@@ -21,6 +21,8 @@
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
+#define prt(v) \
+    for (auto& i : v) cout << i << " \n"[&i == &v.back()]
 
 using namespace std;
 
@@ -28,37 +30,44 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+const int N = 1e5 + 7;
+vi par(N, -1);
+int root(int u) { return par[u] < 0 ? u : par[u] = root(par[u]); }
+void merge(int u, int v) {
+    u = root(u), v = root(v);
+    if (u == v) return;
+    par[u] += par[v];
+    par[v] = u;
+}
 void solve(int T) {
     int n, k;
-    cin >> n >> k;
-    vl a(n);
-    for (auto& i : a) cin >> i;
-    ll l, r;
-    cin >> l >> r;
-
-    sort(a.begin(), a.end());
-    ll bl = 0, br = 0, add;
-
-    for (add = n; add--;) {
-        if (l - a[add] >= 0) {
-            l -= a[add];
-            bl += 1LL << add;
-        }
-    }
-    for (add = n; add--;) {
-        if (r - a[add] >= 0) {
-            r -= a[add];
-            br += 1LL << add;
-        }
+    ll s;
+    cin >> n >> k >> s;
+    vvi e(k, vi(4));
+    for (int i = 0; i++ < k;) {
+        for (int j = 0; j < 3; ++j) cin >> e[i - 1][j];
+        e[i - 1][3] = i;
     }
 
-    vector<vvi> dp(n + 1, vvi(k + 1, vi(3)));
-    dp[0][0][0] = 1;
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < k; ++j)
-            for (int k = 0; k < 3; ++k) {
-                
-            }
+    sort(e.begin(), e.end(), [&](vi& a, vi& b) { return a[2] > b[2]; });
+    for (auto& i : e) {
+        int &u = i[0], &v = i[1], &w = i[2];
+        if (root(u) != root(v)) {
+            merge(u, v);
+            u = 0;
+        }
+    }
+    sort(e.begin(), e.end(), [&](vi& a, vi& b) { return a[2] < b[2]; });
+    vi res;
+    for (auto& i : e) {
+        int &u = i[0], &v = i[1], &w = i[2];
+        if (u && s - w >= 0) {
+            s -= w;
+            res.push_back(i[3]);
+        }
+    }
+    print(res.size());
+    prt(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
