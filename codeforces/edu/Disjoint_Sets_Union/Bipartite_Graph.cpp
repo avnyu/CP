@@ -28,7 +28,7 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 3e5 + 7;
+const int N = 2e5 + 7;
 vi par(N, -1), sub(N, 0);
 
 int root(int u) {
@@ -40,27 +40,17 @@ int root(int u) {
 void merge(int u, int v) {
     u = root(u), v = root(v);
     if (u == v) return;
-    sub[v] = 1;
-    par[u] += par[v];
+    sub[v] += 1;
     par[v] = u;
 }
 void solve(int T) {
-    int n, m;
+    int n, m, shf = 0;
     cin >> n >> m;
-    for (int i = 0; i < m; ++i) {
+    for (; m--;) {
         int t, u, v;
-        cin >> t;
-        if (t == 1) {
-            cin >> u >> v;
-            merge(v, u);
-        } else {
-            cin >> u;
-            if (u == root(u))
-                print(0);
-            else
-                print(sub[u]);
-        }
-        // for (int j = 0; j++ < n;) cout << sub[j] << " \n"[j == n];
+        cin >> t >> u >> v;
+        u = (u + shf) % n;
+        v = (v + shf) % n;
     }
 }
 int main() {

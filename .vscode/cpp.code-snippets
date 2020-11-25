@@ -4,7 +4,7 @@
 	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
 	// same ids are connected.
 	// Example:
-	"C++ default": {
+	"C++ Default": {
 		"prefix": "cpp",
 		"body": [
 			"#include <bits/stdc++.h>",
@@ -30,6 +30,8 @@
 			"#define uni(v) v.erase(unique(v.begin(), v.end()), v.end())",
 			"#define gcd(a, b) __gcd(a, b)",
 			"#define lcm(a, b) (ll) a / __gcd(a, b) * b",
+			"#define prt(v) \\",
+			"    for (auto& i : v) cout << i << \" \\n\"[&i == &v.back()]",
 			"",
 			"using namespace std;",
 			"",
@@ -37,9 +39,7 @@
 			"template <typename T, typename... Args>",
 			"void print(T x, Args... args);",
 			"",
-			"void solve(int T) {",
-			"",
-			"}",
+			"void solve(int T) {}",
 			"int main() {",
 			"    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);",
 			"",
@@ -61,7 +61,7 @@
 			"    }",
 			"}"
 		],
-		"description": "C++ default"
+		"description": "C++ Default"
 	},
 	"CHT": {
 		"prefix": "cht",
