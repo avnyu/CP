@@ -43,7 +43,11 @@ int test(vii& a, int t) {
     // req 2
     for (int i = 0; i < n; ++i)
         for (int j = i + 1; j < n; ++j)
-            if (a[i].fi == a[j].fi || a[i].se == a[j].se) return 2;
+            if (a[i].fi == a[j].fi || a[i].se == a[j].se) {
+                print("wrong", a[i].fi, a[j].fi);
+                print("wrong", a[i].se, a[j].se);
+                return 2;
+            }
 
     // req 3
     for (int i = 0; i < n; ++i)
@@ -55,7 +59,10 @@ int test(vii& a, int t) {
             }
 
     for (auto& [s, e] : a)
-        if (s > t || e > t) return 4;
+        if (s > t || e > t) {
+            print("wrong", s, e);
+            return 4;
+        }
 
     return 0;
 }
@@ -83,7 +90,6 @@ void solve(int T) {
     cin >> n >> k;
 
     vvi a(11, vi(11));
-    a[1][1] = 1;
 
     vii vina, mobi;
 
@@ -99,7 +105,6 @@ void solve(int T) {
         else if (i < (m + 1) * (m + 1))
             y++;
 
-        // a[x][y] = i + 1;
         if (x > 1 && a[x - 1][y] <= n && a[x][y] <= n)
             vina.push_back({a[x - 1][y], a[x][y]});
         if (y > 1 && a[x][y - 1] <= n && a[x][y] <= n)
@@ -115,17 +120,6 @@ void solve(int T) {
             m++;
         }
     }
-    // vina.push_back()
-
-    for (int i = 0; i < 6; ++i)
-        for (int j = 0; j < 6; ++j) cout << a[i][j] << " \n"[j == 5];
-
-    // vina.push_back(ii{9, 10});
-    // mobi.push_back(ii{8, 10});
-
-    print(test(mobi, n));
-    print(test(vina, n));
-    print(test2(vina, mobi, n));
 
     if (k > min(mobi.size(), vina.size()))
         print("NO");
