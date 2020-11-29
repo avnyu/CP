@@ -30,66 +30,74 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int N = 1 << 21;
-vi maxit(N << 1), minit(N << 1), addlz(N << 1), remlz(N << 1);
-// prior 0 : add first
-vi prior(N << 1);
+const int N = 1 << 4;
+vi maxit(N << 1), minit(N << 1);
+vi alz(N << 1), rlz(N << 1);
+vi apr(N << 1), rpr(N << 1);
 
-void add(int i, int v) {
+void add(int i, int v, int pr) {
     maxit[i] = max(maxit[i], v);
     minit[i] = max(minit[i], v);
-    // addlz[i] = v;
+    // alz[i] = v;
 
-    if (v >= addlz[i]) {
-        prior[i] = 1;
-        addlz[i] = v;
-    } else if (!prior[i] && remlz[i] <= v) {
-        prior[i] = 1;
-        addlz[i] = v;
-    } else if (!prior[i] && remlz[i] <= addlz[i]) {
-        prior[i] = 1;
-        addlz[i] = remlz[i];
+    if (i == N + 6) print("add", i, v, pr);
+
+    if (pr < max(apr[i], rpr[i])) print("Wrong");
+
+    if (v >= alz[i]) {
+        apr[i] = pr;
+        alz[i] = v;
+    } else if (apr[i] < rpr[i] && rlz[i] <= v) {
+        apr[i] = pr;
+        alz[i] = v;
+    } else if (apr[i] < rpr[i] && rlz[i] <= alz[i]) {
+        apr[i] = pr;
+        alz[i] = v;
     }
 }
-void rem(int i, int v) {
+void rem(int i, int v, int pr) {
     maxit[i] = min(maxit[i], v);
     minit[i] = min(minit[i], v);
-    // remlz[i] = v;
+    // rlz[i] = v;
 
-    if (v <= remlz[i]) {
-        prior[i] = 0;
-        remlz[i] = v;
-    } else if (prior[i] && addlz[i] >= v) {
-        prior[i] = 0;
-        remlz[i] = v;
-    } else if (prior[i] && addlz[i] >= remlz[i]) {
-        prior[i] = 0;
-        remlz[i] = addlz[i];
+    if (i == N + 6) print("rem", i, v, pr);
+
+    if (pr < max(apr[i], rpr[i])) print("Wrong");
+
+    if (v <= rlz[i]) {
+        rpr[i] = pr;
+        rlz[i] = v;
+    } else if (rpr[i] < apr[i] && alz[i] >= v) {
+        rpr[i] = pr;
+        rlz[i] = v;
+    } else if (rpr[i] < apr[i] && alz[i] >= rlz[i]) {
+        rpr[i] = pr;
+        rlz[i] = v;
     }
 }
 void push(int i) {
     if (i >= N) return;
-    if (!prior[i]) {
-        if (addlz[i]) {
-            add(i << 1, addlz[i]);
-            add(i << 1 | 1, addlz[i]);
-            addlz[i] = 0;
+    if (apr[i] > rpr[i]) {
+        if (alz[i]) {
+            add(i << 1, alz[i], apr[i]);
+            add(i << 1 | 1, alz[i], apr[i]);
+            alz[i] = 0;
         }
-        if (remlz[i]) {
-            rem(i << 1, remlz[i]);
-            rem(i << 1 | 1, remlz[i]);
-            remlz[i] = 0;
+        if (rlz[i]) {
+            rem(i << 1, rlz[i], rpr[i]);
+            rem(i << 1 | 1, rlz[i], rpr[i]);
+            rlz[i] = 0;
         }
     } else {
-        if (remlz[i]) {
-            rem(i << 1, remlz[i]);
-            rem(i << 1 | 1, remlz[i]);
-            remlz[i] = 0;
+        if (rlz[i]) {
+            rem(i << 1, rlz[i], rpr[i]);
+            rem(i << 1 | 1, rlz[i], rpr[i]);
+            rlz[i] = 0;
         }
-        if (addlz[i]) {
-            add(i << 1, addlz[i]);
-            add(i << 1 | 1, addlz[i]);
-            addlz[i] = 0;
+        if (alz[i]) {
+            add(i << 1, alz[i], apr[i]);
+            add(i << 1 | 1, alz[i], apr[i]);
+            alz[i] = 0;
         }
     }
 }
@@ -97,30 +105,34 @@ void upd(int i) {
     maxit[i] = max(maxit[i << 1], maxit[i << 1 | 1]);
     minit[i] = min(minit[i << 1], minit[i << 1 | 1]);
 }
-void mod(int b, int e, int v, int i = 1, int l = 0, int r = N - 1) {
+void mod(int b, int e, int v, int pr, int i = 1, int l = 0, int r = N - 1) {
     push(i);
     if (l > e || r < b) return;
     if (b <= l && r <= e) {
         if (v > 0)
-            add(i, v);
+            add(i, v, pr);
         else
-            rem(i, -v);
+            rem(i, -v, pr);
         return;
     }
     int m = (l + r) >> 1;
-    mod(b, e, v, i << 1, l, m);
-    mod(b, e, v, i << 1 | 1, m + 1, r);
+    mod(b, e, v, pr, i << 1, l, m);
+    mod(b, e, v, pr, i << 1 | 1, m + 1, r);
     upd(i);
 }
 void solve(int T) {
     int n, k;
     cin >> n >> k;
-    for (; k--;) {
+    for (int i = 0; i < k; ++i) {
         int t, u, v, h;
         cin >> t >> u >> v >> h;
-        mod(u, v, t == 1 ? h + 1 : -h - 1);
+        // print("mod", u, v, t == 1 ? h + 1 : -h - 1, i + 1);
+        mod(u, v, t == 1 ? h + 1 : -h - 1, i + 1);
     }
-    for (int i = 0; i < n; ++i) mod(i, i, 1);
+    for (int i = 0; i < n; ++i) {
+        mod(i, i, 1, k + i);
+        // print("???", i, i, 1, k + i);
+    }
     for (int i = 0; i < n; ++i) print(maxit[N + i] - 1);
 }
 int main() {
