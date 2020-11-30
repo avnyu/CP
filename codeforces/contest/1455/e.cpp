@@ -33,89 +33,11 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-const int M = 1e9;
-vvi per;
-
-void init(){
-    vi a={0,1,2,3};
-    do{
-        per.push_back(a);
-    }while(next_permutation(a.begin(),a.end()));
-}
-ll dis(ii &a, ii &b){
-    return abs(a.fi-b.fi)+abs(a.se-b.se);
-}
-ll ts(vii&p, ll x, ll y, ll d){
-    vii t(4);
-    t[0] = {x,y};
-    t[1] = {x+d,y};
-    t[2] = {x,y+d};
-    t[3] = {x+d,y+d};
-    
-    ll res=1e18;
-    for(auto&pi:per){
-        ll cur = 0;
-        for(int i=0;i<4;++i)cur+=dis(t[i], p[pi[i]]);
-        res=min(res, cur);
-    }
-    return res;
-}
-ll ts(vii &p, ll x, ll y){
-    ll l=0,r=M, res=1e18;
-    while(l<=r){
-        ll m1=(l+l+r)/3;
-        ll m2=(l+r+r)/3;
-        ll t1 = ts(p, x, y, m1);
-        ll t2 = ts(p, x, y, m2);
-        if(t1 > t2){
-            res = min(res, t1);
-            l = m1 + 1;
-        }else{
-            res = min(res, t2);
-            r = m2 - 1;
-        }
-    }
-    return res;
-}
-ll ts(vii &p, ll x){
-    ll l=0,r=M, res=1e18;
-    while(l<=r){
-        ll m1=(l+l+r)/3;
-        ll m2=(l+r+r)/3;
-        ll t1 = ts(p, x, m1);
-        ll t2 = ts(p, x, m2);
-        if(t1 > t2){
-            res = min(res, t1);
-            l = m1 + 1;
-        }else{
-            res = min(res, t2);
-            r = m2 - 1;
-        }
-    }
-    return res;
-}
-ll ts(vii &p){
-    ll l=0,r=M,res=1e18;
-    while(l<=r){
-        ll m1=(l+l+r)/3;
-        ll m2=(l+r+r)/3;
-        ll t1 = ts(p, m1);
-        ll t2 = ts(p, m2);
-        if(t1 > t2){
-            res = min(res, t1);
-            l = m1 + 1;
-        }else{
-            res = min(res, t2);
-            r = m2 - 1;
-        }
-    }
-    return res;
-}
 void solve(int T) {
     vii p(4);
     for(auto&[x,y]:p)cin>>x>>y;
     
-    print(ts(p));
+    
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);

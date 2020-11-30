@@ -41,7 +41,7 @@ void solve(int T) {
     
     int cnt=0;
     for(int i=n-1;i--;){
-        if(a[i] > a[i+1] && x < a[i]){
+        if(a[i] > a[i+1] && x > ){
             swap(a[i], x);
             cnt++;
         }
