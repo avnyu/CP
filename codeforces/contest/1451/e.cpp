@@ -21,8 +21,6 @@
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
-#define prt(v) \
-    for (auto& i : v) cout << i << " \n"[&i == &v.back()]
 
 using namespace std;
 
@@ -31,49 +29,36 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve(int T) {
-    int n, k;
-    cin >> n >> k;
-    vi a(n);
-    for (auto& i : a) cin >> i;
-
-    sort(a.rbegin(), a.rend());
-
-    ll res = 0, pre = 0;
-    for (int i = 0; i < n; ++i) {
-        res += pre;
-        pre += a[i];
-    }
-
-    ll add = 0, mul = 0, cur = 0;
-    int j = k, c = k + 1;
-    for (int i = n; i--;) {
-        if (j) {
-            j--;
-            a[i] = 0;
+    int n, q;
+    cin >> n >> q;
+    string s;
+    cin >> s;
+    for (int i = 0; i < q; ++i) {
+        int l, r;
+        cin >> l >> r;
+        l--, r--;
+        int sl = -1, sr = 0;
+        for (int j = l; j <= r; ++j) {
+            while (sr < n && s[sr] != s[j]) sr++;
+            // print(i, sr);
+            if (sl == -1) sl = sr;
+            sr++;
+        }
+        sr--;
+        if (r - l == sr - sl) {
+            sr++;
+            while (sr < n && s[sr] != s[r]) sr++;
         }
 
-        cur += mul * a[i];
-        c--;
-
-        if (c == 0) {
-            c = k + 1;
-            mul++;
-        }
-
-        add = max(add, cur - pre);
-
-        print(cur - pre);
-
-        pre -= a[i];
+        // print(s, l, r, sl, sr);
+        print(sr == n ? "NO" : "YES");
     }
-
-    print(res, res + add);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;

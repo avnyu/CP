@@ -1,27 +1,29 @@
 #include <bits/stdc++.h>
 
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
 #define ii pair<int, int>
+#define pll pair<ll, ll>
+#define dd pair<double, double>
 #define vi vector<int>
+#define vl vector<ll>
+#define vd vector<double>
 #define vii vector<ii>
-#define vll vector<ll>
-#define vvi vector<vector<int>>
-#define vvii vector<vector<ii>>
-#define vvll vector<vector<ll>>
+#define vll vector<pll>
+#define vdd vector<dd>
+#define vvi vector<vi>
+#define vvl vector<vl>
+#define vvd vector<vd>
+#define vvii vector<vii>
+#define vvll vector<vll>
+#define vvdd vector<vdd>
 #define fi first
 #define se second
-#define pb push_back
-#define eb emplace_back
-#define all(v) v.begin(), v.end()
-#define rall(v) v.rbegin(), v.rend()
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
-#define debug(x) cerr << #x << ' ' << x << '\n'
-#define prt(u) \
-    for (auto& i : u) cout << i << " \n"[&i == &u.back()];
+#define prt(vec) for(auto&ele:vec)cout<<ele<<" \n"[&ele == &vec.back()]
+#define ub(vec, u) upper_bound(vec.begin(), vec.end(), u) - vec.begin()
+#define viii vector<tuple<int, int, int>>
 
 using namespace std;
 
@@ -122,24 +124,31 @@ struct SA {
         return s.compare(p, k, x) == 0;
     }
 };
-void solve() {
-    string s;
-    cin >> s;
 
-    s += '!';
-    SA a(s, 1, 1);
+void solve(int T) {
+    string s, t;
+    cin >> s >> t;  
+    reverse(t.begin(), t.end());
+    
+    s += t + ' ';
+    SA a(s);
     s += s;
-
-    prt(a.suf);
-    prt(a.lcp);
+    
+    ll res = 0;
+    for(int i=0;i<int(t.size());++i){
+        string ti = t.substr(0, i + 1);
+        reverse(ti.begin(), ti.end());
+        res += a.upper_bound(ti) - a.lower_bound(ti);
+    }
+    
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    // freopen("in", "r", stdin);
 
     int t = 1;
     // cin >> t;
-    while (t--) solve();
+    for (int i = 0; i++ < t;) solve(i);
 
     return 0;
 }
@@ -151,6 +160,6 @@ void print(T x, Args... args) {
         cout << x << ' ';
         print(args...);
     } else {
-        cout << x << endl;
+        cout << x << '\n';
     }
 }

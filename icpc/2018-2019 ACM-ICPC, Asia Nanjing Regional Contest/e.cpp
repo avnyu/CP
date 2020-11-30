@@ -21,8 +21,9 @@
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
-#define prt(v) \
-    for (auto& i : v) cout << i << " \n"[&i == &v.back()]
+#define prt(vec) for(auto&ele:vec)cout<<ele<<" \n"[&ele == &vec.back()]
+#define ub(vec, u) upper_bound(vec.begin(), vec.end(), u) - vec.begin()
+#define viii vector<tuple<int, int, int>>
 
 using namespace std;
 
@@ -33,41 +34,26 @@ void print(T x, Args... args);
 void solve(int T) {
     int n, k;
     cin >> n >> k;
-    vi a(n);
-    for (auto& i : a) cin >> i;
-
-    sort(a.rbegin(), a.rend());
-
-    ll res = 0, pre = 0;
-    for (int i = 0; i < n; ++i) {
-        res += pre;
-        pre += a[i];
-    }
-
-    ll add = 0, mul = 0, cur = 0;
-    int j = k, c = k + 1;
-    for (int i = n; i--;) {
-        if (j) {
-            j--;
-            a[i] = 0;
+    string s, t;
+    cin >> s >> t;
+    
+    int add = 0;
+    vi lz(n + k + 1);
+    for(int i=0;i<n;++i){
+        add = (add + lz[i]) % 2;
+        
+        if(add) s[i] = s[i] == '0' ? '1' : '0';
+        
+        if(s[i] != t[i] && i + k <= n){
+            // print(i);
+            add = (add + 1) % 2;
+            lz[i + k]++;
+            s[i] = t[i];
         }
-
-        cur += mul * a[i];
-        c--;
-
-        if (c == 0) {
-            c = k + 1;
-            mul++;
-        }
-
-        add = max(add, cur - pre);
-
-        print(cur - pre);
-
-        pre -= a[i];
     }
-
-    print(res, res + add);
+    
+    // print(s, t);
+    print(s == t ? "Yes" : "No");
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
