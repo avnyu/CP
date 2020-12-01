@@ -33,16 +33,56 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+vii a(4, {0,0});
+vi hor(4), ver(4);
+ll cal(vii &p, int d){
+    a[1].fi = a[2].se = a[3].fi = a[3].se = d;
+    
+    for(int i=0;i<4;++i){
+        hor[i] = a[i].fi - p[i].fi;
+        ver[i] = a[i].se - p[i].se;
+    }
+    
+    sort(hor.begin(), hor.end());
+    sort(ver.begin(), ver.end());
+    
+    ll h1 = 0, h2 = 0, v1 = 0, v2 = 0;
+    for(int i=0;i<4;++i){
+        h1 += abs(hor[i] - hor[1]);
+        h2 += abs(hor[i] - hor[2]);
+        v1 += abs(ver[i] - ver[1]);
+        v2 += abs(ver[i] - ver[2]);
+    }
+    
+    return min(h1, h2) + min(v1, v2);
+}
 void solve(int T) {
     vii p(4);
-    for(auto&[x,y]:p)cin>>x>>y;
+    for (auto &[x,y]:p)cin>>x>>y;
+    sort(p.begin(), p.end());
     
     
+    ll res = 1e18;
+    do{
+        
+        int l = 0, add = 1 << 30;
+        while(add){
+            ll t1 = cal(p, l + add);
+            ll t2 = cal(p, l + add + 1);
+            
+            if(t2 <= t1)l += add;
+            
+            add >>= 1;
+        }
+        res = min(res, min(cal(p, l), cal(p, l + 1)));
+        
+    }while(next_permutation(p.begin(), p.end()));
+    
+    print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
-    init();
     int t = 1;
     cin >> t;
     for (int i = 0; i++ < t;) solve(i);

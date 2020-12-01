@@ -37,14 +37,26 @@ void solve(int T) {
     int n, x;
     cin >> n >> x;
     vi a(n);
-    for(auto&i:a)cin>>i;
-    
-    int cnt=0;
-    for(int i=n-1;i--;){
-        if(a[i] > a[i+1] && x > ){
-            swap(a[i], x);
-            cnt++;
-        }
+    for (auto&i:a) cin>>i;
+    /*
+    print(n, x);
+    prt(a);
+    */
+    int l = 0, r = 0, cnt = 0;
+    while(l < n){
+        if(x < a[l]){
+            r = l + 1;
+            while(r < n && a[r - 1] <= a[r])r++;
+            
+            if(r == n)break;
+            
+            while(l < r){
+                swap(a[l], x);
+                if(a[l] != x)cnt++;
+                l++;
+            }
+            l = r;
+        }else l++;
     }
     
     for(int i=0;i<n-1;++i)if(a[i]>a[i+1]){
@@ -54,7 +66,7 @@ void solve(int T) {
     print(cnt);
 }
 int main() {
-    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    //ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
     cin >> t;
