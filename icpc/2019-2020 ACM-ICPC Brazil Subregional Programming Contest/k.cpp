@@ -21,6 +21,9 @@
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
+#define viii vector<tuple<int,int,int>>
+#define vc vector<char>
+#define vvc vector<vc>
 
 using namespace std;
 
@@ -28,37 +31,28 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-int ask(string s, int i, int j){
-    cout << s << ' ' << i << ' ' << j << endl;
-    int t;
-    cin >> t;
-    return t;
-}
 void solve(int T) {
     int n;
     cin >> n;
+    vvi dp(n, vi(3, 0));
     
-    int x1 = ask("xor", 1, 2);
-    int x2 = ask("xor", 2, 3);
-    int x3 = ask("xor", 3, 4);
-    vi a(4), g(4), cnt(2);
+    dp[0][0] = 2;
     
-    for(int i=0;i<16;++i){
-        g[0] = 0;
-        g[1] = x1 & 1 << i ? 1 - g[0] : g[0];
-        g[2] = x2 & 1 << i ? 1 - g[1] : g[1];
-        g[3] = x3 & 1 << i ? 1 - g[2] : g[2];
+    for(int i=1;i<n;++i){
+        dp[i][0] = dp[i-1][0] * 2;
         
+        dp[i][1] = dp[i-1][0] * 2 + dp[i-1][1] * 2;
+        
+        dp[i][2] = dp[i-1][0] * i * 2 * 2;
     }
-    for(int i=4;i<n;++i)a[i]=a[i-1]^ask("xor",i,i+1);
-    cout<<"! ";
-    for(int i=0;i<n;++i)cout<<a[i]<<" \n"[i==n-1];
+    
+    print(dp[n-1][0] + dp[n-1][1] + dp[n-1][2]);
 }
 int main() {
-    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;

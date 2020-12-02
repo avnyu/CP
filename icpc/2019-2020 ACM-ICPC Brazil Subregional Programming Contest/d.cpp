@@ -21,6 +21,7 @@
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
+#define viii vector<tuple<int,int,int>>
 
 using namespace std;
 
@@ -28,37 +29,58 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-int ask(string s, int i, int j){
-    cout << s << ' ' << i << ' ' << j << endl;
-    int t;
-    cin >> t;
-    return t;
+const int N = 1e5+7;
+vvi g(N);
+vii bst(N, {-1, -1});
+vi pas(N), par(N);
+
+ii dfs(int u){
+    bst[u]={1,u};
+    for(auto&v:g[u]){
+        auto pv=dfs(v);
+        bst[u]=max(bst[u], ii{pv.fi+1,pv.se});
+    }
+    return bst[u];
 }
 void solve(int T) {
-    int n;
-    cin >> n;
-    
-    int x1 = ask("xor", 1, 2);
-    int x2 = ask("xor", 2, 3);
-    int x3 = ask("xor", 3, 4);
-    vi a(4), g(4), cnt(2);
-    
-    for(int i=0;i<16;++i){
-        g[0] = 0;
-        g[1] = x1 & 1 << i ? 1 - g[0] : g[0];
-        g[2] = x2 & 1 << i ? 1 - g[1] : g[1];
-        g[3] = x3 & 1 << i ? 1 - g[2] : g[2];
-        
+    int n, k;
+    cin >> n >> k;
+    for(int i=1;i++<n;){
+        cin >> par[i];
+        g[par[i]].push_back(i);
     }
-    for(int i=4;i<n;++i)a[i]=a[i-1]^ask("xor",i,i+1);
-    cout<<"! ";
-    for(int i=0;i<n;++i)cout<<a[i]<<" \n"[i==n-1];
+    par[1] = 0;
+    pas[0] = 1;
+    
+    dfs(1);
+    priority_queue<ii>pq;
+    pq.push(bst[1]);
+    
+    int res = 0;
+    for(;pq.size() && k--;){
+        ii h = pq.top();
+        pq.pop();
+        
+        res += h.fi;
+        
+        for(int u=h.se;!pas[u];u=par[u]){
+            pas[u] = 1;
+            for(auto&v:g[u]){
+                if(pas[v])continue;
+                
+                pq.push(bst[v]);
+            }
+        }
+            
+    }
+    
+    print(res);
 }
 int main() {
-    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
-    //cin >> t;
+    // cin >> t;
     for (int i = 0; i++ < t;) solve(i);
 
     return 0;

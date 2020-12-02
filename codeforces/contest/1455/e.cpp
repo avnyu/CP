@@ -35,48 +35,64 @@ void print(T x, Args... args);
 
 vii a(4, {0,0});
 vi hor(4), ver(4);
+vi h(2), v(2);
+
 ll cal(vii &p, int d){
     a[1].fi = a[2].se = a[3].fi = a[3].se = d;
+    h[0] = h[1] = v[0] = v[1] = 2e9;
     
     for(int i=0;i<4;++i){
         hor[i] = a[i].fi - p[i].fi;
         ver[i] = a[i].se - p[i].se;
+        
+        if(hor[i] < h[0]){
+            h[1] = h[0];
+            h[0] = hor[i];
+        }else if(hor[i] < h[1])
+            h[1] = hor[i];
+            
+        if(ver[i] < v[0]){
+            v[1] = v[0];
+            v[0] = ver[i];
+        }else if(ver[i] < v[1])
+            v[1] = ver[i];
     }
     
-    sort(hor.begin(), hor.end());
-    sort(ver.begin(), ver.end());
-    
-    ll h1 = 0, h2 = 0, v1 = 0, v2 = 0;
+    ll h1 = 0, v1 = 0;
     for(int i=0;i<4;++i){
-        h1 += abs(hor[i] - hor[1]);
-        h2 += abs(hor[i] - hor[2]);
-        v1 += abs(ver[i] - ver[1]);
-        v2 += abs(ver[i] - ver[2]);
+        h1 += abs(hor[i] - h[1]);
+        v1 += abs(ver[i] - v[1]);
     }
     
-    return min(h1, h2) + min(v1, v2);
+    return h1 + v1;
 }
 void solve(int T) {
-    vii p(4);
+    vii p(4), best;
     for (auto &[x,y]:p)cin>>x>>y;
     sort(p.begin(), p.end());
     
     
     ll res = 1e18;
     do{
-        
-        int l = 0, add = 1 << 30;
-        while(add){
-            ll t1 = cal(p, l + add);
-            ll t2 = cal(p, l + add + 1);
-            
-            if(t2 <= t1)l += add;
-            
-            add >>= 1;
+        ll t = cal(p, 1e9);
+        if(t < res){
+            res = t;
+            best = p;
         }
-        res = min(res, min(cal(p, l), cal(p, l + 1)));
-        
     }while(next_permutation(p.begin(), p.end()));
+    
+    p = best;
+    
+    int l = 0, add = 1 << 30;
+    while(add){
+        ll t1 = cal(p, l + add);
+        ll t2 = cal(p, l + add + 1);
+        
+        if(t2 <= t1)l += add;
+        
+        add >>= 1;
+    }
+    res = min(res, min(cal(p, l), cal(p, l + 1)));
     
     print(res);
 }
