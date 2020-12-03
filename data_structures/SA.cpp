@@ -122,6 +122,7 @@ struct SA {
         return s.compare(p, k, x) == 0;
     }
 };
+
 void solve() {
     string s;
     cin >> s;

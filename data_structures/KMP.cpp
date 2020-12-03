@@ -32,28 +32,20 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-vvi manacher(string s) {
-    int n = s.size(), m;
-    vvi d(2, vi(n, 0));
-    m = 0;
-    for (int i = 0; i < n; ++i) {
-        d[0][i] = m + d[0][m] > i ? min(d[0][m + m - i], m + d[0][m] - i) : 0;
-        while (i - d[0][i] - 1 >= 0 && i + d[0][i] + 1 < n && s[i - d[0][i] - 1] == s[i + d[0][i] + 1]) d[0][i]++;
-        if (i + d[0][i] > m + d[0][m]) m = i;
+vi kmp(string s) {
+    int n = (int)s.length();
+    vi pi(n);
+    for (int i = 1; i < n; i++) {
+        int j = pi[i-1];
+        while (j > 0 && s[i] != s[j]) j = pi[j-1];
+        if (s[i] == s[j]) j++;
+        pi[i] = j;
     }
-    m = 0;
-    for (int i = 0; i < n; ++i) {
-        d[1][i] = m + d[1][m] > i ? min(d[1][m + m - i - 1], m + d[1][m] - i) : 0;
-        while (i - d[1][i] - 1 >= 0 && i + d[1][i] < n && s[i - d[1][i] - 1] == s[i + d[1][i]]) d[1][i]++;
-        if (i + d[1][i] > m + d[1][m]) m = i;
-    }
-    return d;
+    return pi;
 }
 void solve(int T) {
-	string s = "aabaccabcba";
-	auto d = manacher(s);
-	prt(d[0]);
-	prt(d[1]);
+	string s = "abacabcacba";
+	prt(kmp(s));
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
