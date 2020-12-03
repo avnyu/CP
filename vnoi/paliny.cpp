@@ -32,31 +32,34 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 vvi manacher(string s){
-	int n = s.size(), m = 0;
+	int n = s.size(), m;
 	vvi d(2, vi(n, 0));
+	m = 0;
 	for(int i=0;i<n;++i){
-		d[0][i] = m+d[0][m] > i ? min(d[0][m+m-i], m + d[0][m] - i) : 1;
-		while(i-d[0][i] >= 0 && i+d[0][i] < n && s[i+d[0][i]] == s[i-d[0][i]]) d[0][i]++;
-		d[0][i]--;
+		d[0][i] = m+d[0][m] > i ? min(d[0][m+m-i], m + d[0][m]-i) : 0;
+		while(i-d[0][i]-1 >= 0 && i+d[0][i]+1 < n && s[i-d[0][i]-1] == s[i+d[0][i]+1]) d[0][i]++;
 		if(i+d[0][i]>m+d[0][m]) m=i; 
 	}
 	m = 0;
 	for(int i=0;i<n;++i){
-		d[1][i] = m+d[1][m] > i ? min(d[1][m+m-i-1], m + d[1][m] - i) : 0;
+		d[1][i] = m+d[1][m] > i ? min(d[1][m+m-i-1], m + d[1][m]-i) : 0;
 		while(i-d[1][i]-1 >= 0 && i+d[1][i] < n && s[i-d[1][i]-1] == s[i+d[1][i]]) d[1][i]++;
 		if(i+d[1][i] > m+d[1][m]) m=i;
 	}
 	return d;
 }
 void solve(int T) {
-	string s, t;
-	cin >> s >> t;
+	int n;
+	string s;
+	cin >> n >> s;
 	
 	auto d=manacher(s);
+
+	int res = 0;
+	for(auto&i:d[0])res = max(res, i<<1|1);
+	for(auto&i:d[1])res = max(res, i<<1);
 	
-	print(s);
-	prt(d[0]);
-	prt(d[1]);
+	print(res);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
