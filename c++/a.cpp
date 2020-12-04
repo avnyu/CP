@@ -5,52 +5,83 @@
 
 using namespace std;
 
-vector<int> z_function(string s) {
-    int n = (int) s.length();
-    vector<int> z(n);
-    for (int i = 1, l = 0, r = 0; i < n; ++i) {
-        if (i <= r)
-            z[i] = min (r - i + 1, z[i - l]);
-        while (i + z[i] < n && s[z[i]] == s[i + z[i]])
-            ++z[i];
-        if (i + z[i] - 1 > r)
-            l = i, r = i + z[i] - 1;
+struct SA {
+    string s;
+    int n, lgn;
+    vector<int> suf, lcp, rank;
+    vector<vector<int> > st;
+    SA(string const& str, bool _lcp = true, bool _st = true) {
+        const int alphabet = 128;
+        s = str + str;
+        n = s.size() >> 1;
+        lgn = 17;
+        suf.assign(n, 0);
+        vector<int> c(n), cnt(max(alphabet, n), 0);
+        for (int i = 0; i < n; i++) cnt[s[i]]++;
+        for (int i = 1; i < alphabet; i++) cnt[i] += cnt[i - 1];
+        for (int i = 0; i < n; i++) suf[--cnt[s[i]]] = i;
+        c[suf[0]] = 0;
+        int classes = 1;
+        for (int i = 1; i < n; i++) {
+            if (s[suf[i]] != s[suf[i - 1]]) classes++;
+            c[suf[i]] = classes - 1;
+        }
+        vector<int> pn(n), cn(n);
+        for (int h = 1; h < n; h <<= 1) {
+            for (int i = 0; i < n; i++) {
+                pn[i] = suf[i] - h;
+                if (pn[i] < 0) pn[i] += n;
+            }
+            fill(cnt.begin(), cnt.begin() + classes, 0);
+            for (int i = 0; i < n; i++) cnt[c[pn[i]]]++;
+            for (int i = 1; i < classes; i++) cnt[i] += cnt[i - 1];
+            for (int i = n; i--;) suf[--cnt[c[pn[i]]]] = pn[i];
+            cn[suf[0]] = 0;
+            classes = 1;
+            for (int i = 1; i < n; i++) {
+                pair<int,int> cur = make_pair(c[suf[i]], c[(suf[i] + h) % n]);
+                pair<int,int> prev = make_pair(c[suf[i - 1]], c[(suf[i - 1] + h) % n]);
+                if (cur != prev) ++classes;
+                cn[suf[i]] = classes - 1;
+            }
+            c.swap(cn);
+        }
+
+        if (_lcp) init_lcp();
     }
-    return z;
-}
+    void init_lcp() {
+        int k = 0;
+        rank.assign(n, 0);
+        lcp.assign(n, 0);
+        for (int i = 0; i < n; ++i) rank[suf[i]] = i;
+        for (int i = 0; i < n; ++i) {
+            int j = suf[(rank[i] + 1) % n];
+            while (i + k < n && j + k < n && s[i + k] == s[j + k]) ++k;
+            lcp[rank[i]] = k;
+            if (k) --k;
+        }
+    }
+};
 
 int main(){
     ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     
-    int n;
-    string s;
+    string s, t;
+    cin >> s >> t;
     
-    int T = 0;
-    while(1){
-        T++;
-        cin >> n;
-        if(n == 0)break;
-        cin >> s;
-        
-        vector<int> z = z_function(s);
-        vector<int>res(n + 1, n + 7);
-        
-        for(int i=0;i++<n;)
-            if(n % i == 0){
-                bool ok = true;
-                for(int j=i          ;j<n;j+=i) if(z[j] < i){
-                    ok = false;
-                    break;
-                }
-                if(ok){
-                    for(int j=i+i;j<=n;j+=i)res[j] = min(res[j], i);
-                }
-            }
-        
-        cout << "Test case #" << T << "\n";
-        //cout << s << '\n';
-        for(int i=1;i++<n;)if(res[i] != n + 7)cout<< i << " " << i / res[i] << '\n';
+    string st = s + '0' + t + '1';
+    
+    SA a(st, true, false);
+    
+    int n = s.size(), m = t.size();
+    int res = 0;
+    
+    for(int i=1;i<a.n;++i){
+        if(a.suf[i-1] < n && a.suf[i] > n && a.suf[i] < n + 1 + m) res = max(res, a.lcp[i-1]);
+        if(a.suf[i] < n && a.suf[i-1] > n && a.suf[i-1] < n + 1 + m) res = max(res, a.lcp[i-1]);
     }
+    
+    cout << res << '\n';
 
     return 0;
 }
