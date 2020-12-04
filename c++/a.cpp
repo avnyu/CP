@@ -1,105 +1,56 @@
-#include <bits/stdc++.h>
-
-#define ll long long
-#define ii pair<int, int>
-#define pll pair<ll, ll>
-#define dd pair<double, double>
-#define vi vector<int>
-#define vl vector<ll>
-#define vd vector<double>
-#define vii vector<ii>
-#define vll vector<pll>
-#define vdd vector<dd>
-#define vvi vector<vi>
-#define vvl vector<vl>
-#define vvd vector<vd>
-#define vvii vector<vii>
-#define vvll vector<vll>
-#define vvdd vector<vdd>
-#define fi first
-#define se second
-#define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
-#define gcd(a, b) __gcd(a, b)
-#define lcm(a, b) (ll) a / __gcd(a, b) * b
-#define prtarr(u) \
-    for (auto& i : u) cout << i << " \n"[&i == &u.back()]
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
-void print();
-template <typename T, typename... Args>
-void print(T x, Args... args);
-
-const int N = 1 << 15;
-const int lgN = 15;
-vvi st(N, vi(lgN, -N));
-
-vi longestBracket(string s) {
-    int n = s.size();
-    vvi pos(N << 1);
-    st[0][0] = N;
-    for (int i = 0; i < n; ++i) {
-        st[i + 1][0] = st[i][0] + (s[i] == '(' ? 1 : -1);
-        pos[st[i + 1][0]].push_back(i + 1);
+vector<int> z_function(string s) {
+    int n = (int) s.length();
+    vector<int> z(n);
+    for (int i = 1, l = 0, r = 0; i < n; ++i) {
+        if (i <= r)
+            z[i] = min (r - i + 1, z[i - l]);
+        while (i + z[i] < n && s[z[i]] == s[i + z[i]])
+            ++z[i];
+        if (i + z[i] - 1 > r)
+            l = i, r = i + z[i] - 1;
     }
-
-    for (int j = 1; j < lgN; ++j)
-        for (int i = 0; i + (1 << j) < N; ++i)
-            st[i][j] = min(st[i][j - 1], st[i + (1 << (j - 1))][j - 1]);
-
-    auto lowest = [&](int l, int r) {
-        int t = 31 - __builtin_clz(r - l + 1);
-        return min(st[l][t], st[r + 1 - (1 << t)][t]);
-    };
-
-    int len = 0, cnt = 1;
-    for (int i = 0; i++ < n;) {
-        int r = i - 1, add = N, &prv = st[i - 1][0];
-        while (add) {
-            if (r + add < N && lowest(r, r + add) >= prv) r += add;
-            add >>= 1;
-        }
-        if (r < i) continue;
-        r = upper_bound(pos[prv].begin(), pos[prv].end(), r) -
-            pos[prv].begin() - 1;
-
-        // cout << i - 1 << ' ' << pos[prv][r] << endl;
-
-        if (pos[prv][r] - i + 1 > len) {
-            len = pos[prv][r] - i + 1;
-            cnt = 1;
-        } else if (pos[prv][r] - i + 1 == len)
-            cnt++;
-    }
-
-    // cout << "res " << len << ' ' << cnt << '\n';
-    // for (int i = 0; i++ < n;) cout << st[i][0] << " \n"[i == n];
-
-    return vi{len, cnt};
+    return z;
 }
-void solve(int T) {
+
+int main(){
+    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    
+    int n;
     string s;
-    cin >> s;
-    auto res = longestBracket(s);
-    prtarr(res);
-}
-int main() {
-    // ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-
-    int t = 1;
-    // cin >> t;
-    for (int i = 0; i++ < t;) solve(i);
+    
+    int T = 0;
+    while(1){
+        T++;
+        cin >> n;
+        if(n == 0)break;
+        cin >> s;
+        
+        vector<int> z = z_function(s);
+        vector<int>res(n + 1, n + 7);
+        
+        for(int i=0;i++<n;)
+            if(n % i == 0){
+                bool ok = true;
+                for(int j=i          ;j<n;j+=i) if(z[j] < i){
+                    ok = false;
+                    break;
+                }
+                if(ok){
+                    for(int j=i+i;j<=n;j+=i)res[j] = min(res[j], i);
+                }
+            }
+        
+        cout << "Test case #" << T << "\n";
+        //cout << s << '\n';
+        for(int i=1;i++<n;)if(res[i] != n + 7)cout<< i << " " << i / res[i] << '\n';
+    }
 
     return 0;
-}
-
-void print() { cout << "\n"; }
-template <typename T, typename... Args>
-void print(T x, Args... args) {
-    if (sizeof...(args)) {
-        cout << x << ' ';
-        print(args...);
-    } else {
-        cout << x << endl;
-    }
 }
