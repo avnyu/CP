@@ -121,6 +121,22 @@ struct SA {
         if (p == n) return false;
         return s.compare(p, k, x) == 0;
     }
+    int lef(int p, int k){
+		int l = p, add = 1 << (32 - __builtin_clz(n));
+		while (add) {
+			if (l - add >= 0 && lcp_query(l - add, p) >= k) l -= add;
+			add >>= 1;
+		}
+		return l;
+	}
+	int rig(int p, int k){
+		int r = p, add = 1 << (32 - __builtin_clz(n));
+		while (add) {
+			if (r + add < n && lcp_query(p, r + add) >= k) r += add;
+			add >>= 1;
+		}
+		return r;
+	}
 };
 
 void solve() {
