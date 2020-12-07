@@ -1,5 +1,0 @@
-ICPC vn central report from team UIT.Xuzmeowiszabest (Vân Anh, Hữu Phong, Thanh Huy)
-Kì thi này là kì thi may mắn với bọn em khi những giờ đầu tiên Phong có thể tìm được 3 bài làm được và submit AC ngay lần đầu.
-Tuy nhiên, do không nhận ra phương pháp làm nhanh chóng cho bài C nên submit sai khá nhiều do thử độ may mắn, tuy nhiên sau đó đã bình tĩnh và giải quyết được bài C - 1 trong 2 bài được cho là dễ nhất. Sau đó là tìm kiếm những bài có dạng quen thuộc (nhân ma trận, sparse table, quy hoach động), cả team có thời gian ngồi lại debug và kịp thay đổi hướng đi đã hơi lệch, giúp thành công trong việc chinh phục 7 bài.
-Những thời gian cuối, cả đội cố gắng làm bài A nhưng do mệt mỏi qua những bài trước và cách xử lý bài rối rắm nên không thể cùng debug mà là ai nhắm được thì thử, kết quả thất bại trong bài A.
-Qua đó, team em đã có thời gian khởi động có thể gọi là tốt nhưng về cuối thiếu điềm tĩnh để giải quyết vấn đề, team em sẽ cố gắng khắc phục điểm này.
