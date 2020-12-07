@@ -16,16 +16,15 @@
 #define rall(v) v.rbegin(), v.rend()
 #define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
 #define gcd(a, b) __gcd(a, b)
-#define lcm(a, b) (long long) a / __gcd(a, b) * b
+#define lcm(a, b) (long long)a / __gcd(a, b) * b
 #define debug(x) cerr << #x << ' ' << x << '\n'
-#define prt(u) \
-    for (auto& i : u) cout << i << " \n"[&i == &u.back()];
+#define prt(u)                                                                 \
+    for (auto &i : u) cout << i << " \n"[&i == &u.back()];
 
 using namespace std;
 
 void print();
-template <typename T, typename... Args>
-void print(T x, Args... args);
+template <typename T, typename... Args> void print(T x, Args... args);
 
 void solve() {
     int n;
@@ -45,8 +44,7 @@ int main() {
 }
 
 void print() { cout << "\n"; }
-template <typename T, typename... Args>
-void print(T x, Args... args) {
+template <typename T, typename... Args> void print(T x, Args... args) {
     if (sizeof...(args)) {
         cout << x << ' ';
         print(args...);
