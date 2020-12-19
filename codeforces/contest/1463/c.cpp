@@ -12,8 +12,8 @@ void solve() {
     for (int i = 0; i < n; ++i) {
         if (t[i] >= tm) {
             bg = ed;
-            tm = t[i] + abs(x[i] - bg);
             ed = x[i];
+            tm = t[i] + abs(ed - bg);
         } else {
             bg += ed > bg ? t[i] - t[i - 1] : t[i - 1] - t[i];
         }
