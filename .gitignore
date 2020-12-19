@@ -6,8 +6,5 @@
 # Unignore file.cpp
 !*.py
 
-# Unignore file.pdf
-!*.pdf
-
 # Unignore all dirs
 !*/
