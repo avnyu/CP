@@ -6,4 +6,3 @@ a = ''.join([i.strip() for i in a.split('\n')])
 print(a)
 
 obs = []
-while()
