@@ -1,26 +1,85 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+const int N = 1e6 + 7;
+int st_n = 0;
+int sav_n = 0;
+int begin_n = 0;
+vector<int> begin_pos(N);
+vector<pair<int, int>> sav(N);
+vector<int> st(N);
+
 int main() {
     ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
 
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    const int M = 1e9 + 7;
+    int q;
+    cin >> q;
 
-    int dp[n + 1][n + 1][3];
-    memset(dp, 0, sizeof dp);
-    dp[0][0][0] = 1;
+    for (; q--;) {
+        string s;
+        int x;
+        cin >> s;
+        if (s == "push") {
+            cin >> x;
 
-    for (int i = 0; i < n; ++i)
-        for (int k = 0; k < n + 1; ++k) 
-            for (int j = 0; j <= i; ++j) {
-                if (s[i] == 'W'){
-                    
+            st[st_n++] = x;
+            sav[sav_n++] = {0, 0};
+
+        } else if (s == "top") {
+            cin >> x;
+
+            if (x >= st_n) cout << "0\n";
+            else cout << st[st_n - 1 - x] << "\n";
+
+        } else if (s == "pop") {
+            cin >> x;
+
+            while (st_n && x) {
+                sav[sav_n++] = {1, st[st_n - 1]};
+
+                st_n--;
+                x--;
+            }
+
+        } else if (s == "begin"){
+
+            begin_pos[begin_n++] = sav_n;
+            sav[sav_n++] = {2, 0};
+
+        } else if (s == "rollback") {
+            if (begin_n == 0) {
+                cout << "false\n";
+                continue;
+            }
+            
+            while (sav[sav_n - 1].first != 2) {
+                int t = sav[sav_n - 1].first;
+                int y = sav[sav_n - 1].second;
+                sav_n--;
+
+                if (t == 0) {
+                    st_n--;
+                } else {
+                    st[st_n++] = y;
                 }
             }
+            
+            begin_n--;
+            sav_n--;
+            cout << "true\n";
+        } else if (s == "commit") {
+            if (begin_n == 0) {
+                cout << "false\n";
+                continue;
+            }
+            
+            for (int i = begin_pos[begin_n - 1]; i < sav_n - 1; ++i) sav[i] = sav[i + 1];
+        
+            begin_n--;
+            sav_n--;
+            cout << "true\n";
+        }
+    }
 
     return 0;
 }
