@@ -6,8 +6,8 @@ int st_n = 0;
 int sav_n = 0;
 int begin_n = 0;
 vector<int> begin_pos(N);
-vector<pair<int, int>> sav(N);
 vector<int> st(N);
+vector<pair<int, int>> sav(N);
 
 int main() {
     ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
