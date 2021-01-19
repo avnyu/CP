@@ -1,123 +1,68 @@
 #include <bits/stdc++.h>
-#define lli long long int
+
+#define ll long long
+#define ii pair<int, int>
+#define vi vector<int>
+#define vii vector<ii>
+#define vll vector<ll>
+#define vvi vector<vector<int>>
+#define vvii vector<vector<ii>>
+#define vvll vector<vector<ll>>
+#define fi first
+#define se second
+#define all(v) v.begin(), v.end()
+#define rall(v) v.rbegin(), v.rend()
+#define uni(v) v.erase(unique(v.begin(), v.end()), v.end())
+#define gcd(a, b) __gcd(a, b)
+#define lcm(a, b) (ll) a / __gcd(a, b) * b
+
 using namespace std;
 
-const int N = 1 << 20;
-const int H = 20;
-vector<int> it_max(N << 1, 0), it_min(N << 1, N), lz(N);
+void print();
+template <typename T, typename... Args>
+void print(T x, Args... args);
 
-void apply(int p, int v) {
-    it_max[p] += v;
-    it_min[p] += v;
-    if (p < N) lz[p] += v;
-}
+const int N = 87;
+const int M = 1e5 + 7;
+int n, m;
+vii p(N);
+vi dp(M);
 
-void push(int p) {
-    for (int s = H; s; --s) {
-        int i = p >> s;
-        if (lz[i]) {
-            apply(i << 1, lz[i]);
-            apply(i << 1 | 1, lz[i]);
-            lz[i] = 0;
+void solve() {
+    cin >> n >> m;
+    for (int i = 0; i < n; ++i) cin >> p[i].fi >> p[i].se;
+    // sort(p.begin(), p.end());
+
+    fill(dp.begin() + 1, dp.end(), M);
+
+    for (int j = 1; j <= m; ++j) {
+        for (int i = 0; i < n; ++i) if (p[i].fi + p[i].se >= j) {
+            int cst = max(0, p[i].fi - p[i].se - j);
+            int nxt = min(m, p[i].fi + p[i].se + cst);
+            dp[nxt] = min(dp[nxt], dp[j - 1] + cst);
         }
+        dp[j] = min(dp[j], dp[j - 1] + 1);
     }
+
+    cout << dp[m] << '\n';
 }
-
-void build(int i) {
-    while (i > 1) {
-        i >>= 1;
-        it_max[i] = max(it_max[i << 1], it_max[i << 1 | 1]) + lz[i];
-        it_min[i] = min(it_min[i << 1], it_min[i << 1 | 1]) + lz[i];
-    }
-}
-
-void modify(int l, int r, int v) {
-    l += N, r += N;
-    int l0 = l + N, r0 = r + N;
-
-    push(l);
-    push(r - 1);
-    for (; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) apply(l--, v);
-        if (r & 1) apply(--r, v);
-    }
-    build(l0);
-    build(r0 - 1);
-}
-
-int query_max(int l, int r) {
-    l += N, r += N;
-    int l0 = l, r0 = r, res = 0;
-
-    push(l);
-    push(r - 1);
-    for (; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = max(res, it_max[l++]);
-        if (r & 1) res = max(res, it_max[--r]);
-    }
-    build(l0);
-    build(r0 - 1);
-}
-
-int query_min(int l, int r) {
-    l += N, r += N;
-    int l0 = l, r0 = r, res = N;
-
-    push(l);
-    push(r - 1);
-    for (; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = min(res, it_min[l++]);
-        if (r & 1) res = min(res, it_min[--r]);
-    }
-    build(l0);
-    build(r0 - 1);
-}
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
+    ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
-    int n, p = 0;
-    cin >> n;
-    string a = (N, '.');
-
-    for (int i = 0; i < n; ++i) {
-        char c;
-        cin >> c;
-
-        if (c == 'L')
-            p = max(0, p - 1);
-        else if (c == 'R')
-            p++;
-        else if (c == '(') {
-            if (a[p] == ')')
-                modify(p, N - 1, 2);
-            else if (a[p] != '(')
-                modify(p, N - 1, 1);
-
-            a[p] = c;
-        } else if (c == ')') {
-            if (a[p] == '(')
-                modify(p, N - 1, -2);
-            else if (a[p] != ')')
-                modify(p, N - 1, -1);
-            a[p] = c;
-        } else {
-            if (a[p] = '(')
-                modify(p, N - 1, -1);
-            else if (a[p] == ')')
-                modify(p, N - 1, 1);
-
-            a[p] = c;
-        }
-
-        int ls = query_max(N - 1, N - 1);
-        int mx = query_max(0, N - 1);
-        int mn = query_min(0, N - 1);
-
-        cout << (ls == 0 && mn == 0 ? mx : -1) << " \n"[i == n - 1];
-    }
+    int t = 1;
+    // cin >> t;
+    while (t--) solve();
 
     return 0;
+}
+
+void print() { cout << "\n"; }
+template <typename T, typename... Args>
+void print(T x, Args... args) {
+    if (sizeof...(args)) {
+        cout << x << ' ';
+        print(args...);
+    } else {
+        cout << x << '\n';
+    }
 }
