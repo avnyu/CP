@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 #define ll long long
@@ -27,7 +28,19 @@ template <typename T>
 void print_all(vector<T>& a);
 
 void solve() {
-    
+    int a, b, c;
+    cin >> a >> b >> c;
+    int cnt = 0;
+    if (a) a--, cnt++;
+    if (b) b--, cnt++;
+    if (c) c--, cnt++;
+    if (a < b) swap(a, b);
+    if (a < c) swap(a, c);
+    if (a && b) a--, b--, cnt++;
+    if (b && c) b--, c--, cnt++;
+    if (a && c) a--, c--, cnt++;
+    if (a && b && c) cnt++;
+    cout << cnt << '\n';
 }
 
 int main() {
@@ -35,7 +48,7 @@ int main() {
     // freopen("in", "r", stdin);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) solve();
 
     return 0;
