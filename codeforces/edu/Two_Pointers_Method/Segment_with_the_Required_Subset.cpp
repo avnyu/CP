@@ -27,13 +27,72 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
+typedef pair<int, bitset<1000>> state;
+
 void solve() {
-    int n, s;
-    cin >> n >> s;
+    int n, k;
+    cin >> n >> k;
     vi a(n);
     for (auto& i : a) cin >> i;
 
-    
+    stack<state> s, t;
+    int res = n + 1;
+    state x;
+    x.second.set(0);
+
+    auto good = [](stack<state>&vs, stack<state>&vt, int vk) {
+        if (vs.empty() && vt.empty())
+            return false;
+        else if (vs.empty())
+            return vt.top().second.test(vk);
+        else if (vt.empty())
+            return vs.top().second.test(vk);
+        else {
+            for (int i = 0; i <= vk; ++i)
+                if (vs.top().second.test(i) & vt.top().second.test(vk - i))
+                    return true;
+            return false;
+        }
+    };
+
+    auto add = [] (stack<state>&vs, int v, state vx) {
+        if (vs.empty()) {
+            state tmp;
+            tmp.first = v;
+            tmp.second = vx.second | (vx.second << v);
+            vs.push(tmp);
+        } else {
+            state tmp;
+            tmp.first = v;
+            tmp.second = vs.top().second | (vs.top().second << v);
+            vs.push(tmp);
+        }
+    };
+
+    auto rem = [] (auto vadd, stack<state>&vs, stack<state>&vt, state vx) {
+        if (vt.empty()) {
+            while (!vs.empty()) {
+                vadd(vt, vs.top().first, vx);
+                vs.pop();
+            }
+        } else vt.pop();
+    };
+
+    for (int i = 0, j = 0; i < n; ++i) {
+        while (j < n && !good(s, t, k)) {
+            add(s, a[j], x);
+            ++j;
+        }
+
+        if (good(s, t, k)) {
+            gmin(res, j - i);
+            print(i, j);
+        }
+
+        rem(add, s, t, x);
+    }
+
+    print(res <= n ? res : -1);
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
