@@ -15,7 +15,7 @@
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
 #define prt(v) \
-    for (auto &i : v) cout << i << " \n"[&i == &v.back()]
+    for (auto& i : v) cout << i << " \n"[&i == &v.back()]
 #define gmax(a, b) \
     if (b > a) a = b
 #define gmin(a, b) \
@@ -27,13 +27,15 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void solve() {}
+void solve() {
+    cout << "Hello world" << '\n';
+}
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
     // cin >> t;
-    for (; t--;) solve();
+    for (int i = 0; i++ < t;) solve();
 
     return 0;
 }
