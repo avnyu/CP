@@ -1,14 +1,8 @@
 # all file
 *
 
-# Unignore file.cpp
-!*.cpp
+# unignore file with extension
+!*.*
 
-# Unignore file.cpp
-!*.py
-
-# Unignore file.json
-!*.json
-
-# Unignore all dirs
-!*/
+# ignore file.cpp
+*.txt
