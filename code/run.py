@@ -1,6 +1,5 @@
 import subprocess as sp
 import numpy as np
-import sys
 import os
 
 from numpy.random import random
@@ -34,7 +33,7 @@ def testcase_same_numbers(path, n, s, l, v):
     testcase_write(path, _n, _s, _l, a)
 
 
-def testcase_no_answer(path, n, s, l):
+def testcase_random_no_answer(path, n, s, l):
     global sdir, ac, wa, MAX_N, MAX_V
 
     _n = np.random.randint(low=n - n // 10, high=n)
@@ -97,16 +96,35 @@ def testcase_random(path, n, s, l):
 
     testcase_write(path, _n, _s, _l, a)
 
-    # ans = []
 
-    # for sol in ac:
-    #     _args = [os.path.join(sdir, sol)]
-    #     p = sp.run(args=_args, stdin=open(path),
-    #                stdout=sp.PIPE, stderr=sp.STDOUT)
-    #     ans.append(p.stdout.decode().strip())
+def testcase_increasing(path, n, s, l):
+    global sdir, ac, wa, MAX_N, MAX_V
 
-    # print(ans)
+    _n = np.random.randint(low=n - n // 10, high=n)
+    _s = s
+    _l = l
 
+    _low = np.random.randint(low=-MAX_V, high=MAX_V)
+    if _low + _n > MAX_N:
+        _low -= _n
+
+    a = [_low + i for i in range(_n)]
+
+    testcase_write(path, _n, _s, _l, a)
+
+def testcase_inscreasing_hard(path, n):
+    global sdir, ac, wa, MAX_N, MAX_V
+
+    _n = np.random.randint(low=n - n // 10, high=n)
+    _s = np.
+
+    _low = np.random.randint(low=-MAX_V, high=MAX_V)
+    if _low + _n > MAX_N:
+        _low -= _n
+
+    a = [_low + i for i in range(_n)]
+
+    testcase_write(path, _n, _s, _l, a)
 
 path = os.path.join(idir, '12.txt')
 testcase_random(path, 1000, 1000000, 10)
