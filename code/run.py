@@ -295,6 +295,6 @@ def write_output():
         with open(_out, 'w') as file:
             file.write(p.stdout.decode())
 
-
-# do_testing()
+create_test()
+do_testing()
 write_output()
