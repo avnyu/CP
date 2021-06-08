@@ -117,7 +117,7 @@ std::ostream& operator<<(std::ostream& os, const vector<T>& v) {
     return os;
 }
 
-const int MAXN = 100005, MAX_LGN = 18;
+const int MAXN = 2e6+5, MAX_LGN = 22;
 
 int N, S, L;
 int a[MAXN];

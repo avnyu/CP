@@ -4,11 +4,12 @@ using namespace std;
 typedef long long ll;
 typedef long double ld;
 
-int stmin[20][100005];
-int stmax[20][100005];
-int lg[100005];
-int niz[100005];
-int dp[100005];
+const int M = 2e6+5;
+int stmin[22][M];
+int stmax[22][M];
+int lg[M];
+int niz[M];
+int dp[M];
 
 const int INF = 1000000000;
 

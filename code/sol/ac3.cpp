@@ -3,7 +3,7 @@
 #include <cstring>
 #include <iostream>
 using namespace std;
-#define MAXN 10000000
+#define MAXN 2000000
 #define LL long long
 int n, s, l;
 int a[MAXN + 5], p[MAXN + 5];

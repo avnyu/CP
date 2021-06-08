@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = (int)1e5 + 500;
+const int MAXN = (int)2e6 + 500;
 const int INF = (int)2e9 + (int)1e7;
 
 int n, s, l;

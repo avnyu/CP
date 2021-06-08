@@ -25,7 +25,7 @@ template <class T>
 void chmin(T &a, T b) {
     if (a > b) a = b;
 }
-const int N = 1e5 + 10;
+const int N = 2e6 + 10;
 const ll INF = 1LL << 60;
 
 multiset<ll> ms;

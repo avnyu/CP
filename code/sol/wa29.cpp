@@ -15,9 +15,9 @@ using namespace std;
 typedef long long ll;
 typedef double db;
 
-const int N = 1e5 + 101;
+const int N = 2e6 + 101;
 const int M = 1e9 + 7;
-const int d = 16;
+const int d = 22;
 
 int n, s, k, a[N];
 int mx[d][N], mn[d][N];

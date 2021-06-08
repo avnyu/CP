@@ -42,7 +42,7 @@ void debug_out(Head H, Tail... T) {
     } while (0)
 #define dbg_ok cerr << "OK!\n"
 
-const int N = 100100;
+const int N = 2e6 + 100;
 int n, dp[N], a[N], s, l;
 
 int main() {

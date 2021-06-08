@@ -1,7 +1,7 @@
 #include <iostream>
 #include <set>
 using namespace std;
-const int maxn = 1e5 + 5;
+const int maxn = 2e6 + 5;
 const int inf = 0x3f3f3f;
 int a[maxn], dp[maxn];
 int main() {

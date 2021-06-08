@@ -19,7 +19,7 @@
 #include <unordered_map>
 #include <vector>
 typedef long long ll;
-#define MAX 100005
+#define MAX 2000005
 using namespace std;
 #define INF 2147483647
 #define infL (1LL << 60)

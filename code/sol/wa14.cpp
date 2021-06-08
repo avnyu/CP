@@ -9,7 +9,8 @@ typedef long double ld;
 ll n, s, l;
 multiset<ll, less<ll> > Minim, DP;
 multiset<ll, greater<ll> > Maxim;
-ll dp[100005], V[100005];
+const int M = 2e6 + 5;
+ll dp[M], V[M];
 
 int main() {
     ios_base::sync_with_stdio(false);

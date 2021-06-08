@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <iostream>
-#define NMAX 100001
+#define NMAX 2000002
 #define LOG_MAX 18
 using namespace std;
 

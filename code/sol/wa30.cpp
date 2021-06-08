@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int maxN = 1e5 + 5;
+const int maxN = 2e6 + 5;
 const int mod = 1e9 + 7;
 
 int n;
 int a[maxN];
 int strip, dif, len;
-int miner[18][maxN];
-int maxer[18][maxN];
+int miner[22][maxN];
+int maxer[22][maxN];
 int coef;
 int pw2[maxN];
 int l[maxN];

@@ -8,7 +8,7 @@ using namespace std;
 #define se second
 #define pb push_back
 #define arr vector<ll>
-const ll maxn = 1e5 + 100, msiz = 2, mod = 1e9 + 7, inf = 1e9;
+const ll maxn = 2e6 + 100, msiz = 2, mod = 1e9 + 7, inf = 1e9;
 int spr1[maxn * 2][20], lg[maxn], a[maxn], n, s, L, spr2[maxn * 2][20],
     mr[maxn], f[maxn], spr3[maxn * 2][20];
 
