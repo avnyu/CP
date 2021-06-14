@@ -24,21 +24,38 @@ template <typename T, typename... Args>
 void print(T x, Args... args);
 
 void solve() {
-    int n, m;
-    cin >> n >> m;
-    vvi a(n, vi(m));
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < m; ++j) {
-            char c;
-            cin >> c;
-            a[i][j] = c == '0' ? 0 : -1;
+    int n;
+    cin >> n;
+    vvi a(2, vi(n));
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < n; ++j) {
+            cin >> a[i][j];
+            a[i][j]--;
         }
 
-    map<ii, int> mp;
+    vvi p(2, vi(n));
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < n; ++j) p[i][a[i][j]] = j;
+
+    int M = 1e9 + 7;
+    int cur = 1;
+
+    for (int i = 0; i < n; ++i) {
+        if (a[0][i] == -1) continue;
+
+        cur = (cur << 1) % M;
+
+        while (a[0][i] != -1) {
+            a[0][i] = -1;
+            i = p[0][a[1][i]];
+        }
+    }
+
+    print(cur);
 }
 int main() {
     ios::sync_with_stdio(false);
-    // cin.tie(nullptr), cout.tie(nullptr);
+    cin.tie(nullptr), cout.tie(nullptr);
 
     int t = 1;
     cin >> t;
