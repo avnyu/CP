@@ -37,7 +37,19 @@ void ans(vi a) {
     cout << "! " << x << endl;
 }
 void solve() {
-    
+    int n, a;
+    cin >> n >> a;
+    const int N = 1e9 + 1;
+
+    bitset<N> b;
+    b.set(0);
+
+    for (int u; n--;) {
+        cin >> u;
+        // b = b | (b << u);
+    }
+
+    cout << (b.test(a) ? "YES\n" : "NO\n");
 }
 int main() {
     ios::sync_with_stdio(false);
