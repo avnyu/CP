@@ -1,6 +1,6 @@
 Working on https://cp-algorithms.com/
 
-#Algebra#  
+**Algebra**
  - Fundamentals  
    - [ ] Binary Exponentiation  
    - [ ] Euclidean algorithm for computing the greatest common divisor  
@@ -32,7 +32,8 @@ Working on https://cp-algorithms.com/
    - [ ] Arbitrary-Precision Arithmetic  
    - [ ] Fast Fourier transform  
    - [ ] Operations on polynomials and series  
-#Data Structures#  
+ 
+**Data Structures**
  - Fundamentals  
    - [ ] Minimum Stack / Minimum Queue  
    - [ ] Sparse Table  
@@ -46,13 +47,15 @@ Working on https://cp-algorithms.com/
    - [ ] Randomized Heap  
  - Advanced  
    - [ ] Deleting from a data structure in O(T(n)log n)  
-#Dynamic Programming#  
+
+**Dynamic Programming**
  - DP optimizations  
    - [ ] Divide and Conquer DP  
  - Tasks  
    - [ ] Dynamic Programming on Broken Profile. Problem "Parquet"  
    - [ ] Finding the largest zero submatrix  
-#String Processing#  
+
+**String Processing**  
  - Fundamentals  
    - [ ] String Hashing  
    - [ ] Rabin-Karp for String Matching  
@@ -68,14 +71,16 @@ Working on https://cp-algorithms.com/
    - [ ] Expression parsing  
    - [ ] Manacher's Algorithm - Finding all sub-palindromes in O(N)  
    - [ ] Finding repetitions  
-#Linear Algebra#  
+
+**Linear Algebra**  
  - Matrices  
    - [ ] Gauss & System of Linear Equations  
    - [ ] Gauss & Determinant  
    - [ ] Kraut & Determinant  
    - [ ] Rank  Finding Power of Factorial Divisor  
    - [ ] Binomiaof a matrix  
-#Combinatorics#  
+
+**Combinatorics**  
  - Fundamentals  
    - [ ]l Coefficients  
    - [ ] Catalan Numbers  
@@ -88,13 +93,15 @@ Working on https://cp-algorithms.com/
    - [ ] Placing Bishops on a Chessboard  
    - [ ] Balanced bracket sequences  
    - [ ] Counting labeled graphs  
-#Numerical Methods#  
+
+**Numerical Methods**  
  - Search  
    - [ ] Ternary Search  
    - [ ] Newton's method for finding roots  
  - Integration  
    - [ ] Integration by Simpson's formula  
-#Geometry#  
+
+**Geometry**  
  - Elementary operations  
    - [ ] Basic Geometry  
    - [ ] Finding the equation of a line for a segment  
@@ -123,7 +130,8 @@ Working on https://cp-algorithms.com/
    - [ ] Delaunay triangulation and Voronoi diagram  
    - [ ] Vertical decomposition  
    - [ ] Half-plane intersection - S&I Algorithm in O(Nlog N)  
-#Graphs#  
+
+**Graphs**  
 - Graph traversal  
    - [ ] Breadth First Search  
    - [ ] Depth First Search  
@@ -178,7 +186,8 @@ Working on https://cp-algorithms.com/
    - [ ] Tree painting  
    - [ ] 2-SAT  
    - [ ] Heavy-light decomposition  
-#Miscellaneous#  
+
+**Miscellaneous**  
 - Sequences  
    - [ ] RMQ task (Range Minimum Query - the smallest element in an interval)  
    - [ ] Longest increasing subsequence  
