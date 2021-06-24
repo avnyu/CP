@@ -36,12 +36,11 @@ int main() {
 
     vi z;
     z_function(s, z);
+    // prt(z.begin(), z.end());
 
-    for (int i = 1; i < n; ++i)
-        if (i + z[i] == n) {
-            cout << s.substr(i) << '\n';
-            break;
-        }
+    int t = *max_element(z.begin(), z.end());
+
+    while ()
 
     return 0;
 }
