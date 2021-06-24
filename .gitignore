@@ -1,9 +1,0 @@
-# all file
-*
-
-# unignore file with extension
-!/**/
-!*.*
-
-# ignore file cpp
-*.txt
