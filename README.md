@@ -1,6 +1,6 @@
 Working on https://cp-algorithms.com/
 
-#Algebra#
+#Algebra  
 ## Fundamentals  
    - [ ] Binary Exponentiation  
    - [ ] Euclidean algorithm for computing the greatest common divisor  
@@ -33,7 +33,7 @@ Working on https://cp-algorithms.com/
    - [ ] Fast Fourier transform  
    - [ ] Operations on polynomials and series  
  
-#Data Structures#
+#Data Structures  
 ## Fundamentals  
    - [ ] Minimum Stack / Minimum Queue  
    - [ ] Sparse Table  
@@ -48,7 +48,7 @@ Working on https://cp-algorithms.com/
 ## Advanced  
    - [ ] Deleting from a data structure in O(T(n)log n)  
 
-#Dynamic Programming#
+#Dynamic Programming
 ## DP optimizations  
    - [ ] Divide and Conquer DP  
 ## Tasks  
@@ -132,43 +132,43 @@ Working on https://cp-algorithms.com/
    - [ ] Half-plane intersection## S&I Algorithm in O(Nlog N)  
 
 #Graphs  
-- Graph traversal  
+## Graph traversal  
    - [ ] Breadth First Search  
    - [ ] Depth First Search  
-- Connected components, bridges, articulations points  
+## Connected components, bridges, articulations points  
    - [ ] Finding Connected Components  
    - [ ] Finding Bridges in O(N+M)  
    - [ ] Finding Bridges Online  
    - [ ] Finding Articulation Points in O(N+M)  
    - [ ] Strongly Connected Components and Condensation Graph  
    - [ ] Strong Orientation  
-- Single-source shortest paths  
+## Single-source shortest paths  
    - [ ] Dijkstra## finding shortest paths from given vertex  
    - [ ] Dijkstra on sparse graphs  
    - [ ] Bellman-Ford## finding shortest paths with negative weights  
    - [ ] 0-1 BFS  
    - [ ] D´Esopo-Pape algorithm  
-- All-pairs shortest paths  
+## All-pairs shortest paths  
    - [ ] Floyd-Warshall## finding all shortest paths  
    - [ ] Number of paths of fixed length / Shortest paths of fixed length  
-- Spanning trees  
+## Spanning trees  
    - [ ] Minimum Spanning Tree## Prim's Algorithm  
    - [ ] Minimum Spanning Tree## Kruskal  
    - [ ] Minimum Spanning Tree## Kruskal with Disjoint Set Union  
    - [ ] Second best Minimum Spanning Tree## Using Kruskal and Lowest Common Ancestor  
    - [ ] Kirchhoff Theorem  
    - [ ] Prüfer code  
-- Cycles  
+## Cycles  
    - [ ] Checking a graph for acyclicity and finding a cycle in O(M)  
    - [ ] Finding a Negative Cycle in the Graph  
    - [ ] Eulerian Path  
-- Lowest common ancestor  
+## Lowest common ancestor  
    - [ ] Lowest Common Ancestor  
    - [ ] Lowest Common Ancestor## Binary Lifting  
    - [ ] Lowest Common Ancestor## Farach-Colton and Bender algorithm  
    - [ ] Solve RMQ by finding LCA  
    - [ ] Lowest Common Ancestor## Tarjan's off-line algorithm  
-- Flows and related problems  
+## Flows and related problems  
    - [ ] Maximum flow## Ford-Fulkerson and Edmonds-Karp  
    - [ ] Maximum flow## Push-relabel algorithm  
    - [ ] Maximum flow## Push-relabel algorithm improved  
@@ -177,10 +177,10 @@ Working on https://cp-algorithms.com/
    - [ ] Flows with demands  
    - [ ] Minimum-cost flow  
    - [ ] Assignment problem. Solution using min-cost-flow in O (N^5)  
-- Matchings and related problems  
+## Matchings and related problems  
    - [ ] Bipartite Graph Check  
    - [ ] Kuhn' Algorithm## Maximum Bipartite Matching  
-- Miscellaneous  
+## Miscellaneous  
    - [ ] Topological Sorting  
    - [ ] Edge connectivity / Vertex connectivity  
    - [ ] Tree painting  
@@ -188,19 +188,19 @@ Working on https://cp-algorithms.com/
    - [ ] Heavy-light decomposition  
 
 #Miscellaneous  
-- Sequences  
+## Sequences  
    - [ ] RMQ task (Range Minimum Query## the smallest element in an interval)  
    - [ ] Longest increasing subsequence  
    - [ ] Search the subsegment with the maximum/minimum sum  
    - [ ] K-th order statistic in O(N)  
-- Game Theory  
+## Game Theory  
    - [ ] Games on arbitrary graphs  
    - [ ] Sprague-Grundy theorem. Nim  
-- Schedules  
+## Schedules  
    - [ ] Scheduling jobs on one machine  
    - [ ] Scheduling jobs on two machines  
    - [ ] Optimal schedule of jobs given their deadlines and durations  
-- Miscellaneous  
+## Miscellaneous  
    - [ ] Josephus problem  
    - [ ] 15 Puzzle Game: Existence Of The Solution  
    - [ ] The Stern-Brocot Tree and Farey Sequences  
