@@ -23,32 +23,6 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void z_function(string &s, vi &z);
-void prefix_function(string &s, vi &z);
-
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr), cout.tie(nullptr);
-
-    string s;
-    cin >> s;
-
-    int n = s.size();
-
-    vi z;
-    z_function(s, z);
-    // prt(z.begin(), z.end());
-
-    int t = 0;
-    for (int i = 0; i < n; ++i) t = max(t, z[i] - (i + z[i] == n));
-
-    while (t && z[n - t] != t) t--;
-
-    cout << (t ? s.substr(0, t) : "Just a  legend") << '\n';
-
-    return 0;
-}
-
 // An array of length n where the i-th element is the length of the longest
 // substring starting from i that also a prefix of s.
 void z_function(string &s, vi &z) {
@@ -61,11 +35,43 @@ void z_function(string &s, vi &z) {
         if (i + z[i] > j + z[j]) j = i;
     }
 }
-// An array of length n where the i-th element is the length of the longest
-// proper prefix which is also a suffix of substring s[0..i]
-void prefix_function(string &s, vi &z){
-    int n = s.size(), i;
-    z.assign(n, 0);
-    int j = 0;
-    
+
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+    s += s;
+    vi z;
+    z_function(s, z);
+
+    int t = n;
+    for (int i = 1; i < n; i++)
+        if (s[i + z[i]] > s[z[i]]) {
+            t = i;
+            break;
+        }
+
+    for (int i = 0; i < k; ++i) cout << s[i % t] << (i == k - 1 ? "\n" : "");
+}
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr), cout.tie(nullptr);
+
+    int t = 1;
+    // cin >> t;
+    for (int i = 0; i++ < t;) solve();
+
+    return 0;
+}
+
+void print() { cout << "\n"; }
+template <typename T, typename... Args>
+void print(T x, Args... args) {
+    if (sizeof...(args)) {
+        cout << x << ' ';
+        print(args...);
+    } else {
+        cout << x << '\n';
+    }
 }
