@@ -5,7 +5,7 @@
 #define ll long long
 #define vll vector<ll>
 #define vvll vector<vll>
-#define ii pair<int,int>
+#define ii pair<int, int>
 #define vii vector<ii>
 #define vvii vector<vii>
 #define fi first
@@ -15,7 +15,7 @@
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
 #define prt(v) \
-    for (auto& i : v) cout << i << " \n"[&i == &v.back()]
+    for (auto &i : v) cout << i << " \n"[&i == &v.back()]
 #define gmax(a, b) \
     if (b > a) a = b
 #define gmin(a, b) \
@@ -27,9 +27,7 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void solve() {
-
-}
+void solve() {}
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
