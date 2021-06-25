@@ -82,7 +82,7 @@ Working on https://cp-algorithms.com/
 
 # Combinatorics  
 ## Fundamentals  
-   - [ ]l Coefficients  
+   - [ ] Coefficients  
    - [ ] Catalan Numbers  
 ## Techniques  
    - [ ] The Inclusion-Exclusion Principle  
