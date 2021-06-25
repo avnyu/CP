@@ -66,6 +66,7 @@ void z_function(string &s, vi &z) {
         if (i + z[i] > j + z[j]) j = i;
     }
 }
+// WIP
 // An array of length n where the i-th element is the length of the longest
 // proper prefix which is also a suffix of substring s[0..i]
 void prefix_function(string &s, vi &z) {
