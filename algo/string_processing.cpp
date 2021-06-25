@@ -36,7 +36,7 @@ void solve(int T, int E) {
 
     int t = n;
     for (int i = 1; i < n; i++)
-        if (n % i == 0 && i + z[i] == n) {  
+        if (n % i == 0 && i + z[i] == n) {
             t = i;
             break;
         }

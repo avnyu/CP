@@ -5,7 +5,7 @@
 #define ll long long
 #define vll vector<ll>
 #define vvll vector<vll>
-#define ii pair<int, int>
+#define ii pair<int,int>
 #define vii vector<ii>
 #define vvii vector<vii>
 #define fi first
@@ -15,11 +15,7 @@
 #define gcd(a, b) __gcd(a, b)
 #define lcm(a, b) (ll) a / __gcd(a, b) * b
 #define prt(v) \
-    for (auto &i : v) cout << i << " \n"[&i == &v.back()]
-#define gmax(a, b) \
-    if (b > a) a = b
-#define gmin(a, b) \
-    if (b < a) a = b
+    for (auto& i : v) cout << i << " \n"[&i == &v.back()]
 
 using namespace std;
 
@@ -27,7 +23,22 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-void solve() {}
+// An array of length n where the i-th element is the length of the longest
+// substring starting from i that also a prefix of s.
+void z_function(string &s, vi &z) {
+    int n = s.size(), i;
+    z.assign(n, 0);
+    int j = 0;
+    for (i = 1; i < n; ++i) {
+        if (j + z[j] > i) z[i] = min(j + z[j] - i, z[i - j]);
+        while (i + z[i] < n && s[i + z[i]] == s[z[i]]) z[i]++;
+        if (i + z[i] > j + z[j]) j = i;
+    }
+}
+
+void solve() {
+    
+}
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
