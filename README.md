@@ -60,7 +60,7 @@ Working on https://cp-algorithms.com/
    - [ ] String Hashing  
    - [ ] Rabin-Karp for String Matching  
    - [ ] Prefix function - Knuth-Morris-Pratt  
-   - [ ] Z-function  
+   - [x] Z-function
    - [ ] Suffix Array  
    - [ ] Aho-Corasick algorithm  
 ## Advanced  
@@ -204,3 +204,27 @@ Working on https://cp-algorithms.com/
    - [ ] Josephus problem  
    - [ ] 15 Puzzle Game: Existence Of The Solution  
    - [ ] The Stern-Brocot Tree and Farey Sequences  
+
+# Code
+<details>
+   <summary>
+      Z-function
+   </summary>
+   <p>
+
+   ```cpp
+   // An array of length n where the i-th element is the length of the longest
+   // substring starting from i that also a prefix of s.
+   void z_function(string &s, vector<int> &z) {
+       int n = s.size(), i, j = 0;
+       z.assign(n, 0);
+       for (i = 1; i < n; ++i) {
+           if (j + z[j] > i) z[i] = min(j + z[j] - i, z[i - j]);
+           while (i + z[i] < n && s[i + z[i]] == s[z[i]]) z[i]++;
+           if (i + z[i] > j + z[j]) j = i;
+       }
+   }
+   ```
+
+   </p>
+</details>
