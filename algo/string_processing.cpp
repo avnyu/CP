@@ -57,9 +57,8 @@ int main() {
 // An array of length n where the i-th element is the length of the longest
 // substring starting from i that also a prefix of s.
 void z_function(string &s, vi &z) {
-    int n = s.size(), i;
+    int n = s.size(), i, j = 0;
     z.assign(n, 0);
-    int j = 0;
     for (i = 1; i < n; ++i) {
         if (j + z[j] > i) z[i] = min(j + z[j] - i, z[i - j]);
         while (i + z[i] < n && s[i + z[i]] == s[z[i]]) z[i]++;

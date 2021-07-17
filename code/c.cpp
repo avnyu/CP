@@ -23,90 +23,68 @@ void print();
 template <typename T, typename... Args>
 void print(T x, Args... args);
 
-typedef vector<double> vd;
-
-void apply(vd &a, vd &b, int p) {
-    double u = a[p];
-    double v = a[p + 1];
-    a[p] = min(u, (u + v - b[p]) / 2);
-    a[p + 1] = max(v, (u + v + b[p]) / 2);
+// An array of length n where the i-th element is the length of the longest
+// substring starting from i that also a prefix of s.
+void z_function(string &s, vi &z) {
+    int n = s.size(), i, j = 0;
+    z.assign(n, 0);
+    for (i = 1; i < n; ++i) {
+        if (j + z[j] > i) z[i] = min(j + z[j] - i, z[i - j]);
+        while (i + z[i] < n && s[i + z[i]] == s[z[i]]) z[i]++;
+        if (i + z[i] > j + z[j]) j = i;
+    }
 }
-void test() {
-    vd a = {3, 2, 100};
-    vd b = {0, 0};
 
-    prt(a.begin(), a.end());
-    prt(b.begin(), b.end());
+vvi dp, z2d;
 
-    srand(time(NULL));
-    for (int i = 0; i < 10000; ++i) apply(a, b, rand() % 2);
+int cal(int l, int r) {
+    if (dp[l][r] != -1) return dp[l][r];
+    if (l == r) return dp[l][r] = 1;
 
-    prt(a.begin(), a.end());
-}
-void solve() {
-    const int M = 1e9 + 7;
-    int n;
-    cin >> n;
-    vi c(n), b(n - 1);
-    for (int i = 0; i < n; ++i) cin >> c[i];
-    for (int i = 0; i < n - 1; ++i) cin >> b[i];
-    int q, u;
-    cin >> q >> u;
+    dp[l][r] = r - l + 1;
+    for (int i = l + 1; i <= r; ++i) {
+        int t = i - l;
 
-    vi a(n);
-    a[0] = u;
-    for (int i = 0; i < n - 1; ++i) a[i + 1] = a[i] + b[i];
-    int sum = 0;
-    for (int i = 0; i < n; ++i) sum = (sum + a[i]) % M;
+        for (int j = 0; j <= z2d[l][i] && i + j <= r; j += t)
+            dp[l][r] = min(dp[l][r], cal(l, i - 1) + cal(i + j, r));
 
-    const int N = 101;
-    const int V = N * N;
-
-    vvi dp(N, vi(V));
-    for (int v = max(0, u); v <= c[0]; ++v) {
-        int req = 
+        if (i + z2d[l][i] > r && (r - l + 1) % t == 0)
+            dp[l][r] = min(dp[l][r], cal(l, i - 1));
     }
 
-    vi tmp(V);
-    for (int i = 1; i < n; ++i) {
-        for (int cur = 0; cur < V; ++cur) tmp[cur] = 0;
+    return dp[l][r];
+}
+bool solve() {
+    string s;
+    cin >> s;
+    if (s == "*") return false;
 
-        for (int last = 0; last < N; ++last)
-            for (int cur = 0; cur < V; ++cur) {
-                tmp[cur] = (tmp[cur] + dp[last][cur]) % M;
-                dp[last][cur] = 0;
-            }
+    int n = s.size();
 
-        for (int last = 0; last <= c[i]; ++last)
-            for (int cur = 0; cur < V; ++cur) {
-                int next = cur + last < V ? cur + last : V - 1;
-                dp[last][next] = (dp[last][next] + tmp[cur]) % M;
-            }
+    z2d.assign(n, vi(n));
+    for (int i = 0; i < n; ++i) {
+        vi z;
+        string t = s.substr(i);
+        z_function(t, z);
+        for (int j = i; j < n; ++j) z2d[i][j] = z[j - i];
     }
 
-    int res = 0;
-    for (int last = 0; last < N; ++last)
-        for (int cur = 0; cur < V; ++cur) {
-            int req = sum + (last > a[n - 1] ? last - a[n - 1] : 0);
-            if (dp[last][cur] && cur >= req) {
-                res = (res + dp[last][cur]) % M;
-                // print(last, cur, dp[last][cur]);
-            }
-        }
+    dp.assign(n, vi(n, -1));
+    cout << cal(0, n - 1) << '\n';
 
-    // print(sum);
-    // prt(a.begin(), a.end());
-    // for (int i = 0; i < 6; ++i) prt(dp[i].begin(), dp[i].begin() + 10);
+    
+    // for (int i = 0; i < n; ++i)
+    //     for (int j = 0; j < n; ++j) cout << dp[i][j] << " \n"[j == n - 1];
 
-    print(res);
+    return true;
 }
 int main() {
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
-    int t = 1;
+    // int t = 1;
     // cin >> t;
-    for (int i = 0; i++ < t;) solve();
-    // test();
+    // for (int i = 0; i++ < t;) solve();
+    while (solve()) {}
 
     return 0;
 }
